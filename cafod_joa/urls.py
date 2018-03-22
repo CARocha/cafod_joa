@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """cafod_joa URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -14,7 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+
+admin.site.site_header = "administración"
+admin.site.site_title = "sitio administrativo"
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-]
+    url(r'^chaining/', include('smart_selects.urls')),
+    url(r'^selectable/', include('selectable.urls')),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += staticfiles_urlpatterns()
