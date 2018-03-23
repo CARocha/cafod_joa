@@ -17,7 +17,6 @@ CHOICE_SEXO = (
 CHOICE_SEXO1 = (
                 (1, 'Mujer'),
                 (2, 'Hombre'),
-                (3, 'Ambos'),
               )
 CHOICE_JEFE = (
                 (1, 'Si'),
@@ -54,7 +53,7 @@ CHOICE_EDAD = (
                 (11, 'Niñas 0 a 4 años '),
                 (12, 'Niños 0 a 4 años'),
               )
-CHOICE_ESCOLARIDAD = (
+CHOICE_MIEMBRO_FAMILIA = (
                 (1, 'Hombres mayores 31 años'),
                 (2, 'Mujeres mayores 31 años'),
                 (3, 'Hombre joven de 19 a 30 años'),
@@ -217,3 +216,160 @@ class DetalleMiembros(models.Model):
 
     class Meta:
         verbose_name_plural = ''
+
+CHOICE_PARENTESCO = ((1,'Esposo'),
+                     (2,'Esposa'),
+                     (3,'Hijo'),
+                     (4,'Hija'),
+                     (5,'Suegra'),
+                     (6,'Suegro'),
+                     (7,'Tia'),
+                     (8,'Tio'),
+                     (9,'Pariente'),
+                     (10,'Otro'),
+                     )
+
+CHOICE_ESCOLARIDAD = ((1,'Ningún estudio'),
+                     (2,'Primaria incompleta'),
+                     (3,'Primaria completa'),
+                     (4,'Secundaria incompleta'),
+                     (5,'Secundaria completa (o bachiller)'),
+                     (6,'“1” años de carrera universitaria'),
+                     (7,'“2” años de carrera universitaria'),
+                     (8,'“3” años de carrera universitaria'),
+                     (9,'“4” años de carrera universitaria'),
+                     (10,'5” años de carrera universitaria'),
+                     )
+
+class Idiomas(models.Model):
+    nombre = models.CharField(max_length=250)
+
+    def __unicode__(self):
+        return self.nombre
+
+
+class CondicionesVida(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    parentesco = models.IntegerField(choices=CHOICE_PARENTESCO)
+    sexo = models.IntegerField(choices=CHOICE_SEXO1)
+    edad = models.IntegerField()
+    escolaridad = models.IntegerField(choices=CHOICE_ESCOLARIDAD)
+    idioma = models.ForeignKey(Idiomas, verbose_name='idiomas que habla')
+
+
+    def __unicode__(self):
+        return u'%s' % (self.get_sexo_display())
+
+    class Meta:
+        verbose_name_plural = '2.1- Indicar la cantidad de miembros de la familia y su escolaridad'
+
+
+class AguaConsumo(models.Model):
+    nombre = models.CharField(max_length=250)
+
+    def __unicode__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name = 'Agua para consumo'
+        verbose_name_plural = 'Agua para consumo'
+
+
+class AccesoAgua(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    agua = models.ManyToManyField(AguaConsumo)
+
+    class Meta:
+        verbose_name_plural = '2.2.1-Indique la forma que accede al agua para consumo humano'
+
+
+CHOICE_DISPONIBILIDAD = (
+                (1, 'Todo el tiempo'),
+                (2, 'Ocacionalmente'),
+                (3, 'Casi nunca'),
+                (4, 'Solo época lluviosa')
+              )
+
+
+class DisponibilidadAgua(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    disponibilidad = models.IntegerField(choices=CHOICE_DISPONIBILIDAD)
+
+    class Meta:
+        verbose_name_plural = '2.2.2-Mencione la disponibilidad del agua para consumo humano)'
+
+
+CHOICE_OTRO_USO = (
+                (1, 'Uso doméstico'),
+                (2, 'Uso agrícola'),
+                (3, 'Uso turístico'),
+                (4, 'Crianza de peces'),
+                (5, 'Para ganado')
+              )
+
+class UsosAgua(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    uso = models.IntegerField(choices=CHOICE_OTRO_USO, verbose_name='2.2.3-Indique qué otros usos le dan al agua en la UPF')
+    tiempo_invertido = models.FloatField(verbose_name='2.2.4-Tiempo invertido para acarrrear agua desde la fuente')
+
+    class Meta:
+        verbose_name_plural = ''
+
+class OrgComunitarias(models.Model):
+    nombre = models.CharField(max_length=250)
+
+    def __unicode__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name='Organización comunitaria'
+        verbose_name_plural='Organizaciones comunitarias'
+
+
+class BeneficiosOrganizados(models.Model):
+    nombre = models.CharField(max_length=250)
+
+    def __unicode__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name_plural='Beneficios de estar organizado'
+
+class OrganizacionSocialProductiva(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    pertenece = models.IntegerField(choices=CHOICE_JEFE, verbose_name='')
+    caso_si = models.ManyToManyField(OrgComunitarias, verbose_name='3.1.1-Qué organización comunitaria pertenece',blank=True)
+    cuales_beneficios = models.ManyToManyField(BeneficiosOrganizados,
+                            verbose_name='3.1.2-Cuáles son los beneficio de estar organizado',
+                            blank=True)
+    capacitacion = models.IntegerField(choices=CHOICE_JEFE, verbose_name='3.1.3-Ha recibido capacitación por parte de las org.comunitaria')
+
+class Descripcion(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    area = models.FloatField('3.2.1-Cuál es el área aproximada de la UPF?')
+
+    class Meta:
+        verbose_name_plural='Distribución de la UPF'
+
+
+CHOICE_TIERRA = (
+        (1,'Bosque natural'),
+        (2,'Potrero y pastos'),
+        (3,'Plantación forestal'),
+        (4,'Cultivos anuales'),
+        (5,'Cultivos perennes'),
+        (6,'Huertos'),
+    )
+
+class Distribucionupf(models.Model):
+    encuesta = models.ForeignKey(Encuesta)
+    tierra = models.IntegerField(choices=CHOICE_TIERRA, verbose_name='3.2.2-Distribución de la tierra en la UPF')
+    manzanas = models.FloatField()
+
+
+
+
+
+
+
+
