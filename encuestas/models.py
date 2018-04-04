@@ -258,6 +258,9 @@ class Idiomas(models.Model):
     def __unicode__(self):
         return self.nombre
 
+    class Meta:
+        verbose_name_plural = 'Idiomas'
+
 
 class CondicionesVida(models.Model):
     encuesta = models.ForeignKey(Encuesta)
@@ -653,7 +656,7 @@ class GeneroOrgComunitaria(models.Model):
         return u'%s' % (self.nombre)
 
     class Meta:
-        verbose_name_plural = 'Organizaciones comunitarias'
+        verbose_name_plural = 'Organizaciones comunitarias para genero'
 
 class GeneroActividadesComunitaria(models.Model):
     nombre = models.CharField(max_length=250)
