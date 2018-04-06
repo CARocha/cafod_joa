@@ -165,6 +165,7 @@ class Entrevistados(models.Model):
         return self.nombre
 
     class Meta:
+        unique_together = (("nombre", "cedula"),)
         verbose_name = 'Base de datos Productor'
         verbose_name_plural = 'Base de datos Productores'
 
