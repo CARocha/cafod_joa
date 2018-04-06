@@ -630,9 +630,9 @@ class UsoSemilla(models.Model):
                                                             verbose_name='4.5.1-Tipos de semilla usadas en UPF')
     semillas_producidas = models.FloatField('4.5.2-Porcentaje de semillas producidas en la UPF')
     semillas_conseguidas = models.FloatField('4.5.2-Porcentaje de semillas conseguidas en la UPF')
+    compradas_agroservicio = models.FloatField('4.5.3-Compradas en un agroservicio')
     banco_semilla = models.IntegerField(choices=CHOICE_JEFE,
         verbose_name='4.5.3-Usted tiene banco de semillas familiar')
-    compradas_agroservicio = models.FloatField('4.5.3-Compradas en un agroservicio')
     sabe = models.IntegerField(choices=CHOICE_JEFE,
         verbose_name='4.5.4-Sabe si existe un registro comunitario de semillas')
 
