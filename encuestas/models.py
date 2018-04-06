@@ -318,12 +318,12 @@ CHOICE_OTRO_USO = (
                 (2, 'Uso agrícola'),
                 (3, 'Uso turístico'),
                 (4, 'Crianza de peces'),
-                (5, 'Para ganado')
+                (5, 'Para animales')
               )
 
 class UsosAgua(models.Model):
     encuesta = models.ForeignKey(Encuesta)
-    uso = models.IntegerField(choices=CHOICE_OTRO_USO, verbose_name='2.2.3-Indique qué otros usos le dan al agua en la UPF')
+    uso = MultiSelectField(choices=CHOICE_OTRO_USO, verbose_name='2.2.3-Indique qué otros usos le dan al agua en la UPF')
     tiempo_invertido = models.FloatField(verbose_name='2.2.4-Tiempo invertido para acarrrear agua desde la fuente')
 
     class Meta:
@@ -378,7 +378,7 @@ CHOICE_TIERRA = (
 class Distribucionupf(models.Model):
     encuesta = models.ForeignKey(Encuesta)
     tierra = models.IntegerField(choices=CHOICE_TIERRA, verbose_name='3.2.2-Distribución de la tierra en la UPF')
-    manzanas = models.FloatField(help_text='en Ha')
+    manzanas = models.FloatField(help_text='en Ha', verbose_name='hectáreas')
 
 class Cultivos(models.Model):
     codigo = models.CharField(max_length=4)
@@ -609,7 +609,7 @@ CHOICE_ECONOMICAS = (
 class EscasezAlimentos(models.Model):
     encuesta = models.ForeignKey(Encuesta)
     considera = models.IntegerField(choices=CHOICE_JEFE,
-        verbose_name='4.4-Considera que su familia cuenta siempre con suficiente alimentos')
+        verbose_name='4.4-Considera que su familia cuenta siempre con suficiente alimentos producidos en la UPF para consumo diario del hogar?')
     fenomeno = MultiSelectField(choices=CHOICE_FENOMENOS, null=True, blank=True)
     agricola = MultiSelectField(choices=CHOICE_AGRICOLA, null=True, blank=True)
     economica = MultiSelectField(choices=CHOICE_ECONOMICAS, null=True, blank=True)
