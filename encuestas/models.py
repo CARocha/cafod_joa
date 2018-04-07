@@ -28,7 +28,7 @@ CHOICE_DUENO_SI = (
                 (3, 'A nombre de ambos'),
                 (4, 'A nombre de los hijos'),
                 (5, 'A nombre de los hijas'),
-                (6, 'A nombre de parientes'),
+                (6, 'A nombre de padres'),
                 (7, 'A nombre de otros'),
               )
 CHOICE_DUENO_NO = (
@@ -221,7 +221,7 @@ class DetalleMiembros(models.Model):
     encuesta = models.ForeignKey(Encuesta)
     decisiones = models.IntegerField(choices=CHOICES_DECISIONES, verbose_name='1.3-¿Quién toma las decisiones en la UPF')
     cantidad = models.IntegerField('1.4-Cantidad de personas que habitan en el hogar')
-    cantidad_dependen = models.IntegerField('1.5-Cantidad de personas que dependen economicamente en la UPF')
+    cantidad_dependen = models.IntegerField('1.5-¿Cuántas personas dependen economicamente del encuestado/a?')
 
     def __unicode__(self):
         return u'%s' % (self.get_decisiones_display())
@@ -246,11 +246,8 @@ CHOICE_ESCOLARIDAD = ((1,'Ningún estudio'),
                      (3,'Primaria completa'),
                      (4,'Secundaria incompleta'),
                      (5,'Secundaria completa (o bachiller)'),
-                     (6,'“1” años de carrera universitaria'),
-                     (7,'“2” años de carrera universitaria'),
-                     (8,'“3” años de carrera universitaria'),
-                     (9,'“4” años de carrera universitaria'),
-                     (10,'5” años de carrera universitaria'),
+                     (6,'carrera universitarios incompleta'),
+                     (7,'carrera universitaria completa'),
                      )
 
 class Idiomas(models.Model):
@@ -355,7 +352,7 @@ class OrganizacionSocialProductiva(models.Model):
     pertenece = models.IntegerField(choices=CHOICE_JEFE, verbose_name='3.1-Pertenece a alguna organización')
     caso_si = models.ManyToManyField(OrgComunitarias, verbose_name='3.1.1-Qué organización comunitaria pertenece',blank=True)
     cuales_beneficios = models.ManyToManyField(BeneficiosOrganizados,
-                            verbose_name='3.1.2-Cuáles son los beneficio de estar organizado',
+                            verbose_name='3.1.2-¿Por qué decidió integrar estas organizaciones?',
                             blank=True)
     capacitacion = models.IntegerField(choices=CHOICE_JEFE, verbose_name='3.1.3-Ha recibido capacitación por parte de las org.comunitaria')
 
@@ -610,10 +607,10 @@ CHOICE_ECONOMICAS = (
 class EscasezAlimentos(models.Model):
     encuesta = models.ForeignKey(Encuesta)
     considera = models.IntegerField(choices=CHOICE_JEFE,
-        verbose_name='4.4-Considera que su familia cuenta siempre con suficiente alimentos producidos en la UPF para consumo diario del hogar?')
-    fenomeno = MultiSelectField(choices=CHOICE_FENOMENOS, null=True, blank=True)
-    agricola = MultiSelectField(choices=CHOICE_AGRICOLA, null=True, blank=True)
-    economica = MultiSelectField(choices=CHOICE_ECONOMICAS, null=True, blank=True)
+        verbose_name='4.4-Si no cuenta siempre con suficientes alimentos, indicar las principales razones')
+    fenomeno = MultiSelectField(choices=CHOICE_FENOMENOS, null=True, blank=True, verbose_name='Fenómenos naturales')
+    agricola = MultiSelectField(choices=CHOICE_AGRICOLA, null=True, blank=True, verbose_name='Razones agrícolas')
+    economica = MultiSelectField(choices=CHOICE_ECONOMICAS, null=True, blank=True, verbose_name='Razones económicas')
 
 CHOICE_SEMILLAS = (
             ('A','Nativas'),
