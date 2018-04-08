@@ -378,6 +378,9 @@ class Distribucionupf(models.Model):
     tierra = models.IntegerField(choices=CHOICE_TIERRA, verbose_name='3.2.2-Distribución de la tierra en la UPF')
     manzanas = models.FloatField(help_text='en Ha', verbose_name='hectáreas')
 
+    class Meta:
+        verbose_name_plural = 'Ditribución de la tierra en la UPF'
+
 class Cultivos(models.Model):
     codigo = models.CharField(max_length=4)
     nombre = models.CharField(max_length=250)
@@ -570,6 +573,7 @@ CHOICE_ESCASEZ = (
             ('E','Pide donación de alimentos al estado o iglesia'),
             ('F','Pide alimentos a familiares'),
             ('G','Pasa hambre'),
+            ('H','Trueque de productos'),
         )
 
 class SeguridadAlimentaria(models.Model):
@@ -616,7 +620,6 @@ CHOICE_SEMILLAS = (
             ('A','Nativas'),
             ('B','Acriolladas'),
             ('C','Mejoradas/certificadas'),
-            ('D','Falta de mano de obra'),
         )
 
 class UsoSemilla(models.Model):
