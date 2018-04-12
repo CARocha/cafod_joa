@@ -64,13 +64,14 @@ CHOICE_MIEMBRO_FAMILIA = (
                 (8, 'Niñas 5 a 12 años '),
               )
 CHOICE_MEDIDA = (
-                (1, 'Quintal'),
+                (1, 'Quintal(100kg)'),
                 (2, 'Libras'),
                 (3, 'Docena'),
                 (4, 'Cien'),
                 (5, 'Cabeza'),
                 (6, 'Litro'),
                 (7, 'Unidad'),
+                (8, 'Kilo'),
                 )
 # FIN DE CHOICES ESTATICOS
 
@@ -401,7 +402,7 @@ class CultivosAnuales(models.Model):
     area_cosechada = models.FloatField('Area cosechada (Ha)')
     cantidad_cosechada = models.FloatField()
     consumo_familia = models.FloatField('Consumo de la familia')
-    consumo_animal = models.FloatField()
+    consumo_animal = models.FloatField('Semilla')
     venta = models.FloatField()
 
     class Meta:
@@ -428,7 +429,7 @@ class CultivosHuerto(models.Model):
     area_cosechada = models.FloatField('Area cosechada (Ha)')
     cantidad_cosechada = models.FloatField()
     consumo_familia = models.FloatField('Consumo de la familia')
-    consumo_animal = models.FloatField()
+    consumo_animal = models.FloatField('Semilla')
     venta = models.FloatField()
 
     class Meta:
