@@ -16,6 +16,7 @@ class InlineDuenoNo(admin.TabularInline):
 class InlineDetalleMiembros(admin.TabularInline):
     model = DetalleMiembros
     extra = 1
+    max_num = 1
 
 class InlineCondicionesVida(admin.TabularInline):
     model = CondicionesVida
