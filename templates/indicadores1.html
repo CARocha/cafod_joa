@@ -40,31 +40,31 @@ $( "#id_fecha" ).addClass( "form-control" );
 	 		 });
 
 			 $('#id_organizacion').multiselect({
-        //buttonWidth: '250px',
-        maxHeight: 250,
-        includeSelectAllOption: true,
-        selectAllText: 'Seleccionar todos',
-        buttonText: function(options, select) {
-                if (options.length === 0) {
-                    return 'Sin selección ...';
-                }
-                else if (options.length > 3) {
-                    return 'Varias opciones seleccionadas!';
-                }
-                 else {
-                     var labels = [];
-                     options.each(function() {
-                         if ($(this).attr('label') !== undefined) {
-                             labels.push($(this).attr('label'));
-                         }
-                         else {
-                             labels.push($(this).html());
-                         }
-                     });
-                     return labels.join(', ') + '';
-                 }
-            }
-    });
+		        //buttonWidth: '250px',
+		        maxHeight: 250,
+		        includeSelectAllOption: true,
+		        selectAllText: 'Seleccionar todos',
+		        buttonText: function(options, select) {
+		                if (options.length === 0) {
+		                    return 'Sin selección ...';
+		                }
+		                else if (options.length > 3) {
+		                    return 'Varias opciones seleccionadas!';
+		                }
+		                 else {
+		                     var labels = [];
+		                     options.each(function() {
+		                         if ($(this).attr('label') !== undefined) {
+		                             labels.push($(this).attr('label'));
+		                         }
+		                         else {
+		                             labels.push($(this).html());
+		                         }
+		                     });
+		                     return labels.join(', ') + '';
+		                 }
+		            }
+		    });
 
 		$('#id_municipio').multiselect({
 			 enableCollapsibleOptGroups: true,
@@ -141,7 +141,7 @@ $( "#id_fecha" ).addClass( "form-control" );
 	             $.each(data, function(i, item){
 	                 $('#id_departamento').append($('<option></option>').val(item.id).html(item.nombre));
 	                 });
-	 								$('#id_departamento').multiselect('rebuild');
+	 				$('#id_departamento').multiselect('rebuild');
 	        }
 	    });
 	 });
@@ -178,7 +178,7 @@ $( "#id_fecha" ).addClass( "form-control" );
             $.each(data, function(i, item){
                 $('#id_organizacion').append($('<option></option>').val(item.id).html(item.nombre));
                 });
-								$('#id_organizacion').multiselect('rebuild');
+				$('#id_organizacion').multiselect('rebuild');
        }
    });
 	});
@@ -198,7 +198,7 @@ $(document).on('change','#id_municipio',function(){
             $.each(data, function(i, item){
                 $('#id_comunidad').append($('<option></option>').val(item.id).html(item.nombre));
                 });
-								$('#id_comunidad').multiselect('rebuild');
+				$('#id_comunidad').multiselect('rebuild');
        }
    });
 });
@@ -308,7 +308,7 @@ footer{}
 					</div>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-9">
-				{% if request.session.pais %}
+				{% if centinela %}
 		    	{% include "menu_indicadores.html" %}
 				{% else %}
 					<p class="alert alert-success" role="alert">

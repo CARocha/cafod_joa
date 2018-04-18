@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db.models import Count, Sum, Avg, Value as V
+import json as simplejson
+from collections import OrderedDict
+from .models import *
 from .forms import ConsultarForm
 from lugar.models import *
-import json as simplejson
 # Create your views here.
 
 
@@ -38,6 +41,8 @@ def _queryset_filtrado(request):
     for key in unvalid_keys:
         del params[key]
 
+    print params
+
     return Encuesta.objects.filter(**params)
 
 
@@ -58,14 +63,14 @@ def indicadores1(request, template='indicadores1.html'):
             request.session['activo'] = True
             centinela = 1
             request.session['encuestados'] = len(_queryset_filtrado(request))
+            print mensaje
 
         else:
             centinela = 0
-            print "fail no entro bien"
-
+            mensaje = "Todo fallo ni modo :("
+            print mensaje
     else:
         form = ConsultarForm()
-        mensaje = "Existen alguno errores"
         centinela = 0
         if 'pais' in request.session:
             try:
@@ -86,50 +91,38 @@ def indicadores1(request, template='indicadores1.html'):
 def sexo_duenos(request, template="indicadores/sexo_duenos.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
     dicc_sexo_dueno = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        si_dueno = filtro.filter(estacion=year[0], dueno=1).count()
-        no_dueno = filtro.filter(estacion=year[0], dueno=2).count()
+    anio = request.session['fecha']
+    filtro1 = filtro.count()
+    si_dueno = filtro.filter(dueno=1).count()
+    no_dueno = filtro.filter(dueno=2).count()
 
-        a_nombre = {}
-        for obj in CHOICE_DUENO_SI:
-            conteos = filtro.filter(estacion=year[0], duenosi__si=obj[0]).count()
-            a_nombre[obj[1]] = conteos
+    a_nombre = {}
+    for obj in CHOICE_DUENO_SI:
+        conteos = filtro.filter(duenosi__si=obj[0]).count()
+        a_nombre[obj[1]] = conteos
 
-        situacion = {}
-        for obj in CHOICE_DUENO_NO:
-            conteos = filtro.filter(estacion=year[0], duenono__no=obj[0]).count()
-            situacion[obj[1]] = conteos
+    situacion = {}
+    for obj in CHOICE_DUENO_NO:
+        conteos = filtro.filter(duenono__no=obj[0]).count()
+        situacion[obj[1]] = conteos
 
-        sexo_jefe_hogar = {}
-        for obj in CHOICE_SEXO:
-            conteos = filtro.filter(estacion=year[0], sexomiembros__sexo=obj[0]).count()
-            sexo_jefe_hogar[obj[1]] = conteos
+    detalle_edad = {}
+    for obj in CHOICES_DECISIONES:
+        conteos = filtro.filter(detallemiembros__decisiones=obj[0]).count()
+        if conteos > 0:
+            detalle_edad[obj[1]] = conteos
 
-        personas_habitan = {}
-        for obj in CHOICE_SEXO:
-            conteos = filtro.filter(estacion=year[0], sexomiembros__sexo=obj[0]).aggregate(t=Sum('sexomiembros__cantidad'))['t']
-            if conteos > 0:
-                personas_habitan[obj[1]] = conteos
+    cantidad_habitan = filtro.aggregate(t=Avg('detallemiembros__cantidad'))['t']
+    cantidad_dependen = filtro.aggregate(t=Avg('detallemiembros__cantidad_dependen'))['t']
 
-        total_personas = sum(list([ i for i in personas_habitan.values()]))
-
-        detalle_edad = {}
-        for obj in CHOICE_EDAD:
-            conteos = filtro.filter(estacion=year[0], detallemiembros__edad=obj[0]).aggregate(t=Sum('detallemiembros__cantidad'))['t']
-            if conteos > 0:
-                detalle_edad[obj[1]] = conteos
-
-        dicc_sexo_dueno[year[1]] = (si_dueno,no_dueno,a_nombre,situacion,sexo_jefe_hogar,personas_habitan,detalle_edad,total_personas,filtro1)
+    dicc_sexo_dueno[anio] = (si_dueno,no_dueno,a_nombre,situacion,detalle_edad,filtro1,cantidad_habitan,cantidad_dependen)
 
     return render(request, template, locals())
 
 def escolaridad(request, template="indicadores/escolaridad.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
 
     dicc_escolaridad = OrderedDict()
     dicc_grafo_tipo_educacion = OrderedDict()
@@ -519,8 +512,7 @@ def traer_departamento(request):
     ids = request.GET.get('ids', '')
     if ids:
         lista = ids.split(',')
-    results = []
-    departamento = Departamento.objects.filter(pais__pk__in=lista, entrevistados__gt=1).distinct().values('id', 'nombre')
+    departamento = Departamento.objects.filter(pais__pk__in=lista, entrevistados__gte=1).distinct().values('id', 'nombre')
     return HttpResponse(simplejson.dumps(list(departamento)), content_type='application/json')
 
 def traer_municipio(request):
