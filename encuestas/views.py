@@ -127,90 +127,26 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
     dicc_grafo_tipo_educacion = OrderedDict()
 
     filtro1 = filtro.count()
-    cantidad_miembros_hombres = filtro.filter(
-                                entrevistado__departamento=request.session['departamento'],
-                                entrevistado__sexo=2,
-                                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
 
-    cantidad_miembros_mujeres = filtro.filter(
-                                entrevistado__departamento=request.session['departamento'],
-                                entrevistado__sexo=1,
-                                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
-
-    grafo_educacion_hombre = filtro.filter(
-                                entrevistado__departamento=request.session['departamento'],
-                                entrevistado__sexo=2,
-                                entrevistado__jefe=1).aggregate(
-                                no_sabe_leer = Sum('escolaridad__no_leer'),
-                                primaria_incompleta = Sum('escolaridad__pri_incompleta'),
-                                primaria_completa = Sum('escolaridad__pri_completa'),
-                                secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
-                                bachiller = Sum('escolaridad__bachiller'),
-                                universitario = Sum('escolaridad__uni_tecnico'),
-                            )
-
-    grafo_educacion_mujer = filtro.filter(
-                                entrevistado__sexo=1,
-                                entrevistado__jefe=1).aggregate(
-                                no_sabe_leer = Sum('escolaridad__no_leer'),
-                                primaria_incompleta = Sum('escolaridad__pri_incompleta'),
-                                primaria_completa = Sum('escolaridad__pri_completa'),
-                                secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
-                                bachiller = Sum('escolaridad__bachiller'),
-                                universitario = Sum('escolaridad__uni_tecnico'),
-                            )
-
-    tabla_educacion_hombre = []
+    tabla_educacion_hombre = OrderedDict()
     for e in CHOICE_ESCOLARIDAD:
-        objeto = filtro.filter(escolaridad__sexo = e[0],
+        objeto = filtro.filter(
                 entrevistado__sexo=2,
-                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
-                no_leer = Sum('escolaridad__no_leer'),
-                p_incompleta = Sum('escolaridad__pri_incompleta'),
-                p_completa = Sum('escolaridad__pri_completa'),
-                s_incompleta = Sum('escolaridad__secu_incompleta'),
-                bachiller = Sum('escolaridad__bachiller'),
-                universitario = Sum('escolaridad__uni_tecnico'),
-
-                )
-
-        fila = [e[1], objeto['num_total'],
-                saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
-                saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
-                saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
-                saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
-                saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
-                saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
-                ]
-        tabla_educacion_hombre.append(fila)
+                entrevistado__jefe=1,
+                condicionesvida__escolaridad=e[0]).count()
+        tabla_educacion_hombre[e[1]] = objeto
 
     #tabla para cuando la mujer es jefe
 
-    tabla_educacion_mujer = []
+    tabla_educacion_mujer = OrderedDict()
     for e in CHOICE_ESCOLARIDAD:
         objeto = filtro.filter(
-                escolaridad__sexo = e[0],
                 entrevistado__sexo=1,
-                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
-                no_leer = Sum('escolaridad__no_leer'),
-                p_incompleta = Sum('escolaridad__pri_incompleta'),
-                p_completa = Sum('escolaridad__pri_completa'),
-                s_incompleta = Sum('escolaridad__secu_incompleta'),
-                bachiller = Sum('escolaridad__bachiller'),
-                universitario = Sum('escolaridad__uni_tecnico'),
+                entrevistado__jefe=1,
+                condicionesvida__escolaridad=e[0]).count()
+        tabla_educacion_mujer[e[1]] = objeto
 
-                )
-        fila = [e[1], objeto['num_total'],
-                saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
-                saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
-                saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
-                saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
-                saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
-                saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
-                ]
-        tabla_educacion_mujer.append(fila)
-    dicc_escolaridad[year[1]] = (tabla_educacion_hombre,tabla_educacion_mujer,filtro1)
-    dicc_grafo_tipo_educacion[year[1]] = (grafo_educacion_hombre, grafo_educacion_mujer, cantidad_miembros_hombres, cantidad_miembros_mujeres)
+    dicc_escolaridad['reaparar'] = (tabla_educacion_hombre,tabla_educacion_mujer,filtro1)
 
     return render(request, template, locals())
 
@@ -260,27 +196,12 @@ def agua(request, template="indicadores/agua.html"):
         valor = filtro.filter(disponibilidadagua__disponibilidad=obj[0]).count()
         grafo_agua_disponibilidad[obj[1]] =  valor
 
-    grafo_agua_calidad = {}
-    for obj in CHOICE_CALIDAD_AGUA:
-        valor = filtro.filter(calidadagua__calidad=obj[0]).count()
-        grafo_agua_calidad[obj[1]] =  valor
-
-    grafo_agua_contaminada = {}
-    for obj in TipoContamindaAgua.objects.all():
-        valor = filtro.filter(contaminada__contaminada=obj).count()
-        grafo_agua_contaminada[obj] =  valor
-
-    grafo_agua_tratamiento = {}
-    for obj in CHOICE_TRATAMIENTO:
-        valor = filtro.filter(tratamientoagua__tratamiento=obj[0]).count()
-        grafo_agua_tratamiento[obj[1]] =  valor
-
     grafo_agua_usos = {}
     for obj in CHOICE_OTRO_USO:
-        valor = filtro.filter(usosagua__uso=obj[0]).count()
+        valor = filtro.filter(usosagua__uso__icontains=obj[0]).count()
         grafo_agua_usos[obj[1]] =  valor
 
-    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,grafo_agua_calidad,grafo_agua_contaminada,grafo_agua_tratamiento,grafo_agua_usos,filtro1)
+    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,grafo_agua_usos,filtro1)
 
     return render(request, template, locals())
 
