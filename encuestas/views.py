@@ -123,388 +123,375 @@ def sexo_duenos(request, template="indicadores/sexo_duenos.html"):
 def escolaridad(request, template="indicadores/escolaridad.html"):
     filtro = _queryset_filtrado(request)
 
-
     dicc_escolaridad = OrderedDict()
     dicc_grafo_tipo_educacion = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        cantidad_miembros_hombres = filtro.filter(estacion=year[0],
-                                    entrevistado__departamento=request.session['departamento'],
-                                    entrevistado__sexo=2,
-                                    entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
 
-        cantidad_miembros_mujeres = filtro.filter(estacion=year[0],
-                                    entrevistado__departamento=request.session['departamento'],
-                                    entrevistado__sexo=1,
-                                    entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
+    filtro1 = filtro.count()
+    cantidad_miembros_hombres = filtro.filter(
+                                entrevistado__departamento=request.session['departamento'],
+                                entrevistado__sexo=2,
+                                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
 
-        grafo_educacion_hombre = filtro.filter(estacion=year[0],
-                                    entrevistado__departamento=request.session['departamento'],
-                                    entrevistado__sexo=2,
-                                    entrevistado__jefe=1).aggregate(
-                                    no_sabe_leer = Sum('escolaridad__no_leer'),
-                                    primaria_incompleta = Sum('escolaridad__pri_incompleta'),
-                                    primaria_completa = Sum('escolaridad__pri_completa'),
-                                    secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
-                                    bachiller = Sum('escolaridad__bachiller'),
-                                    universitario = Sum('escolaridad__uni_tecnico'),
-                                )
+    cantidad_miembros_mujeres = filtro.filter(
+                                entrevistado__departamento=request.session['departamento'],
+                                entrevistado__sexo=1,
+                                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'))['num_total']
 
-        grafo_educacion_mujer = filtro.filter(estacion=year[0],
-                                    entrevistado__sexo=1,
-                                    entrevistado__jefe=1).aggregate(
-                                    no_sabe_leer = Sum('escolaridad__no_leer'),
-                                    primaria_incompleta = Sum('escolaridad__pri_incompleta'),
-                                    primaria_completa = Sum('escolaridad__pri_completa'),
-                                    secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
-                                    bachiller = Sum('escolaridad__bachiller'),
-                                    universitario = Sum('escolaridad__uni_tecnico'),
-                                )
+    grafo_educacion_hombre = filtro.filter(
+                                entrevistado__departamento=request.session['departamento'],
+                                entrevistado__sexo=2,
+                                entrevistado__jefe=1).aggregate(
+                                no_sabe_leer = Sum('escolaridad__no_leer'),
+                                primaria_incompleta = Sum('escolaridad__pri_incompleta'),
+                                primaria_completa = Sum('escolaridad__pri_completa'),
+                                secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
+                                bachiller = Sum('escolaridad__bachiller'),
+                                universitario = Sum('escolaridad__uni_tecnico'),
+                            )
 
-        tabla_educacion_hombre = []
-        for e in CHOICE_ESCOLARIDAD:
-            objeto = filtro.filter(estacion=year[0], escolaridad__sexo = e[0],
-                    entrevistado__sexo=2,
-                    entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
-                    no_leer = Sum('escolaridad__no_leer'),
-                    p_incompleta = Sum('escolaridad__pri_incompleta'),
-                    p_completa = Sum('escolaridad__pri_completa'),
-                    s_incompleta = Sum('escolaridad__secu_incompleta'),
-                    bachiller = Sum('escolaridad__bachiller'),
-                    universitario = Sum('escolaridad__uni_tecnico'),
+    grafo_educacion_mujer = filtro.filter(
+                                entrevistado__sexo=1,
+                                entrevistado__jefe=1).aggregate(
+                                no_sabe_leer = Sum('escolaridad__no_leer'),
+                                primaria_incompleta = Sum('escolaridad__pri_incompleta'),
+                                primaria_completa = Sum('escolaridad__pri_completa'),
+                                secundaria_incompleta = Sum('escolaridad__secu_incompleta'),
+                                bachiller = Sum('escolaridad__bachiller'),
+                                universitario = Sum('escolaridad__uni_tecnico'),
+                            )
 
-                    )
+    tabla_educacion_hombre = []
+    for e in CHOICE_ESCOLARIDAD:
+        objeto = filtro.filter(escolaridad__sexo = e[0],
+                entrevistado__sexo=2,
+                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
+                no_leer = Sum('escolaridad__no_leer'),
+                p_incompleta = Sum('escolaridad__pri_incompleta'),
+                p_completa = Sum('escolaridad__pri_completa'),
+                s_incompleta = Sum('escolaridad__secu_incompleta'),
+                bachiller = Sum('escolaridad__bachiller'),
+                universitario = Sum('escolaridad__uni_tecnico'),
 
-            fila = [e[1], objeto['num_total'],
-                    saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
-                    ]
-            tabla_educacion_hombre.append(fila)
+                )
 
-            #tabla para cuando la mujer es jefe
+        fila = [e[1], objeto['num_total'],
+                saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
+                saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
+                saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
+                saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
+                saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
+                saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
+                ]
+        tabla_educacion_hombre.append(fila)
 
-        tabla_educacion_mujer = []
-        for e in CHOICE_ESCOLARIDAD:
-            objeto = filtro.filter(estacion=year[0],
-                    escolaridad__sexo = e[0],
-                    entrevistado__sexo=1,
-                    entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
-                    no_leer = Sum('escolaridad__no_leer'),
-                    p_incompleta = Sum('escolaridad__pri_incompleta'),
-                    p_completa = Sum('escolaridad__pri_completa'),
-                    s_incompleta = Sum('escolaridad__secu_incompleta'),
-                    bachiller = Sum('escolaridad__bachiller'),
-                    universitario = Sum('escolaridad__uni_tecnico'),
+    #tabla para cuando la mujer es jefe
 
-                    )
-            fila = [e[1], objeto['num_total'],
-                    saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
-                    saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
-                    ]
-            tabla_educacion_mujer.append(fila)
-        dicc_escolaridad[year[1]] = (tabla_educacion_hombre,tabla_educacion_mujer,filtro1)
-        dicc_grafo_tipo_educacion[year[1]] = (grafo_educacion_hombre, grafo_educacion_mujer, cantidad_miembros_hombres, cantidad_miembros_mujeres)
+    tabla_educacion_mujer = []
+    for e in CHOICE_ESCOLARIDAD:
+        objeto = filtro.filter(
+                escolaridad__sexo = e[0],
+                entrevistado__sexo=1,
+                entrevistado__jefe=1).aggregate(num_total = Sum('escolaridad__total'),
+                no_leer = Sum('escolaridad__no_leer'),
+                p_incompleta = Sum('escolaridad__pri_incompleta'),
+                p_completa = Sum('escolaridad__pri_completa'),
+                s_incompleta = Sum('escolaridad__secu_incompleta'),
+                bachiller = Sum('escolaridad__bachiller'),
+                universitario = Sum('escolaridad__uni_tecnico'),
+
+                )
+        fila = [e[1], objeto['num_total'],
+                saca_porcentajes(objeto['no_leer'], objeto['num_total'], False),
+                saca_porcentajes(objeto['p_incompleta'], objeto['num_total'], False),
+                saca_porcentajes(objeto['p_completa'], objeto['num_total'], False),
+                saca_porcentajes(objeto['s_incompleta'], objeto['num_total'], False),
+                saca_porcentajes(objeto['bachiller'], objeto['num_total'], False),
+                saca_porcentajes(objeto['universitario'], objeto['num_total'], False),
+                ]
+        tabla_educacion_mujer.append(fila)
+    dicc_escolaridad[year[1]] = (tabla_educacion_hombre,tabla_educacion_mujer,filtro1)
+    dicc_grafo_tipo_educacion[year[1]] = (grafo_educacion_hombre, grafo_educacion_mujer, cantidad_miembros_hombres, cantidad_miembros_mujeres)
 
     return render(request, template, locals())
 
 def energia(request, template="indicadores/energia.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_energia = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        grafo_tipo_energia = {}
-        for obj in Energia.objects.all():
-            valor = filtro.filter(estacion=year[0], tipoenergia__tipo=obj).count()
-            grafo_tipo_energia[obj] =  valor
 
-        grafo_panel_solar = {}
-        for obj in CHOICE_PANEL_SOLAR:
-            valor = filtro.filter(estacion=year[0], panelsolar__panel=obj[0]).count()
-            grafo_panel_solar[obj[1]] =  valor
+    filtro1 = filtro.count()
+    grafo_tipo_energia = {}
+    for obj in Energia.objects.all():
+        valor = filtro.filter(tipoenergia__tipo=obj).count()
+        grafo_tipo_energia[obj] =  valor
 
-        grafo_fuente_energia = {}
-        for obj in FuenteEnergia.objects.all():
-            valor = filtro.filter(estacion=year[0], energiasolarcocinar__fuente=obj).count()
-            grafo_fuente_energia[obj] =  valor
+    grafo_panel_solar = {}
+    for obj in CHOICE_PANEL_SOLAR:
+        valor = filtro.filter(panelsolar__panel=obj[0]).count()
+        grafo_panel_solar[obj[1]] =  valor
 
-        grafo_tipo_cocina = {}
-        for obj in Cocinas.objects.all():
-            valor = filtro.filter(estacion=year[0], tipococinas__cocina=obj).count()
-            grafo_tipo_cocina[obj] =  valor
+    grafo_fuente_energia = {}
+    for obj in FuenteEnergia.objects.all():
+        valor = filtro.filter(energiasolarcocinar__fuente=obj).count()
+        grafo_fuente_energia[obj] =  valor
 
-        dicc_energia[year[1]] = (grafo_tipo_energia,grafo_panel_solar,grafo_fuente_energia,grafo_tipo_cocina,filtro1)
+    grafo_tipo_cocina = {}
+    for obj in Cocinas.objects.all():
+        valor = filtro.filter(tipococinas__cocina=obj).count()
+        grafo_tipo_cocina[obj] =  valor
+
+    dicc_energia[year[1]] = (grafo_tipo_energia,grafo_panel_solar,grafo_fuente_energia,grafo_tipo_cocina,filtro1)
 
     return render(request, template, locals())
 
 def agua(request, template="indicadores/agua.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_agua = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        grafo_agua_consumo = {}
-        for obj in AguaConsumo.objects.all():
-            valor = filtro.filter(estacion=year[0], accesoagua__agua=obj).count()
-            grafo_agua_consumo[obj] =  valor
 
-        grafo_agua_disponibilidad = {}
-        for obj in CHOICE_DISPONIBILIDAD:
-            valor = filtro.filter(estacion=year[0], disponibilidadagua__disponibilidad=obj[0]).count()
-            grafo_agua_disponibilidad[obj[1]] =  valor
+    filtro1 = filtro.count()
+    grafo_agua_consumo = {}
+    for obj in AguaConsumo.objects.all():
+        valor = filtro.filter(accesoagua__agua=obj).count()
+        grafo_agua_consumo[obj] =  valor
 
-        grafo_agua_calidad = {}
-        for obj in CHOICE_CALIDAD_AGUA:
-            valor = filtro.filter(estacion=year[0], calidadagua__calidad=obj[0]).count()
-            grafo_agua_calidad[obj[1]] =  valor
+    grafo_agua_disponibilidad = {}
+    for obj in CHOICE_DISPONIBILIDAD:
+        valor = filtro.filter(disponibilidadagua__disponibilidad=obj[0]).count()
+        grafo_agua_disponibilidad[obj[1]] =  valor
 
-        grafo_agua_contaminada = {}
-        for obj in TipoContamindaAgua.objects.all():
-            valor = filtro.filter(estacion=year[0], contaminada__contaminada=obj).count()
-            grafo_agua_contaminada[obj] =  valor
+    grafo_agua_calidad = {}
+    for obj in CHOICE_CALIDAD_AGUA:
+        valor = filtro.filter(calidadagua__calidad=obj[0]).count()
+        grafo_agua_calidad[obj[1]] =  valor
 
-        grafo_agua_tratamiento = {}
-        for obj in CHOICE_TRATAMIENTO:
-            valor = filtro.filter(estacion=year[0], tratamientoagua__tratamiento=obj[0]).count()
-            grafo_agua_tratamiento[obj[1]] =  valor
+    grafo_agua_contaminada = {}
+    for obj in TipoContamindaAgua.objects.all():
+        valor = filtro.filter(contaminada__contaminada=obj).count()
+        grafo_agua_contaminada[obj] =  valor
 
-        grafo_agua_usos = {}
-        for obj in CHOICE_OTRO_USO:
-            valor = filtro.filter(estacion=year[0], usosagua__uso=obj[0]).count()
-            grafo_agua_usos[obj[1]] =  valor
+    grafo_agua_tratamiento = {}
+    for obj in CHOICE_TRATAMIENTO:
+        valor = filtro.filter(tratamientoagua__tratamiento=obj[0]).count()
+        grafo_agua_tratamiento[obj[1]] =  valor
 
-        dicc_agua[year[1]] = (grafo_agua_consumo,grafo_agua_disponibilidad,grafo_agua_calidad,grafo_agua_contaminada,grafo_agua_tratamiento,grafo_agua_usos,filtro1)
+    grafo_agua_usos = {}
+    for obj in CHOICE_OTRO_USO:
+        valor = filtro.filter(usosagua__uso=obj[0]).count()
+        grafo_agua_usos[obj[1]] =  valor
+
+    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,grafo_agua_calidad,grafo_agua_contaminada,grafo_agua_tratamiento,grafo_agua_usos,filtro1)
 
     return render(request, template, locals())
 
 def organizaciones(request, template="indicadores/organizaciones.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_organizacion = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        grafo_pertenece = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], organizacioncomunitaria__pertenece=obj[0]).count()
-            grafo_pertenece[obj[1]] =  valor
 
-        grafo_org_comunitarias = {}
-        for obj in OrgComunitarias.objects.all():
-            valor = filtro.filter(estacion=year[0], organizacioncomunitaria__caso_si=obj).count()
-            if valor > 0:
-                grafo_org_comunitarias[obj] =  valor
+    filtro1 = filtro.count()
+    grafo_pertenece = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(organizacioncomunitaria__pertenece=obj[0]).count()
+        grafo_pertenece[obj[1]] =  valor
 
-        grafo_beneficios = {}
-        for obj in BeneficiosOrganizados.objects.all():
-            valor = filtro.filter(estacion=year[0], organizacioncomunitaria__cuales_beneficios=obj).count()
-            if valor > 0:
-                grafo_beneficios[obj] =  valor
+    grafo_org_comunitarias = {}
+    for obj in OrgComunitarias.objects.all():
+        valor = filtro.filter(organizacioncomunitaria__caso_si=obj).count()
+        if valor > 0:
+            grafo_org_comunitarias[obj] =  valor
 
-        dicc_organizacion[year[1]] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1)
+    grafo_beneficios = {}
+    for obj in BeneficiosOrganizados.objects.all():
+        valor = filtro.filter(organizacioncomunitaria__cuales_beneficios=obj).count()
+        if valor > 0:
+            grafo_beneficios[obj] =  valor
+
+    dicc_organizacion['repaarar'] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1)
 
     return render(request, template, locals())
 
 def practicas(request, template="indicadores/practicas.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_practicas = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        grafo_practicas_sino = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], practicasagroecologicas__si_no=obj[0]).count()
-            grafo_practicas_sino[obj[1]] =  valor
 
-        grafo_manejo = {}
-        for obj in CHOICE_MANEJO:
-            valor = filtro.filter(estacion=year[0], practicasagroecologicas__manejo=obj[0]).count()
-            grafo_manejo[obj[1]] =  valor
+    filtro1 = filtro.count()
+    grafo_practicas_sino = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(practicasagroecologicas__si_no=obj[0]).count()
+        grafo_practicas_sino[obj[1]] =  valor
 
-        grafo_traccion = {}
-        for obj in CHOICE_TRACCION:
-            valor = filtro.filter(estacion=year[0], practicasagroecologicas__traccion=obj[0]).count()
-            grafo_traccion[obj[1]] =  valor
+    grafo_manejo = {}
+    for obj in CHOICE_MANEJO:
+        valor = filtro.filter(practicasagroecologicas__manejo=obj[0]).count()
+        grafo_manejo[obj[1]] =  valor
 
-        grafo_fertilidad = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], practicasagroecologicas__fertilidad=obj[0]).count()
-            grafo_fertilidad[obj[1]] =  valor
+    grafo_traccion = {}
+    for obj in CHOICE_TRACCION:
+        valor = filtro.filter(practicasagroecologicas__traccion=obj[0]).count()
+        grafo_traccion[obj[1]] =  valor
 
-        grafo_control = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], practicasagroecologicas__control=obj[0]).count()
-            grafo_control[obj[1]] =  valor
+    grafo_fertilidad = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(practicasagroecologicas__fertilidad=obj[0]).count()
+        grafo_fertilidad[obj[1]] =  valor
 
-        dicc_practicas[year[1]] = (grafo_practicas_sino,grafo_manejo,grafo_traccion,grafo_fertilidad,grafo_control,filtro1)
+    grafo_control = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(practicasagroecologicas__control=obj[0]).count()
+        grafo_control[obj[1]] =  valor
+
+    dicc_practicas['reparar'] = (grafo_practicas_sino,grafo_manejo,grafo_traccion,grafo_fertilidad,grafo_control,filtro1)
 
     return render(request, template, locals())
 
 def seguridad(request, template="indicadores/seguridad.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_seguridad = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        grafo_economico = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__economico=obj[0]).count()
-            grafo_economico[obj[1]] =  valor
 
-        grafo_secado = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__secado=obj[0]).count()
-            grafo_secado[obj[1]] =  valor
+    filtro1 = filtro.count()
+    grafo_economico = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__economico=obj[0]).count()
+        grafo_economico[obj[1]] =  valor
 
-        grafo_tipo_secado = {}
-        for obj in TipoSecado.objects.all():
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__tipo_secado=obj).count()
-            grafo_tipo_secado[obj] =  valor
+    grafo_secado = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__secado=obj[0]).count()
+        grafo_secado[obj[1]] =  valor
 
-        grafo_plan_cosecha = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__plan_cosecha=obj[0]).count()
-            grafo_plan_cosecha[obj[1]] =  valor
+    grafo_tipo_secado = {}
+    for obj in TipoSecado.objects.all():
+        valor = filtro.filter(seguridadalimentaria__tipo_secado=obj).count()
+        grafo_tipo_secado[obj] =  valor
 
-        grafo_ayuda = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__ayuda=obj[0]).count()
-            grafo_ayuda[obj[1]] =  valor
+    grafo_plan_cosecha = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__plan_cosecha=obj[0]).count()
+        grafo_plan_cosecha[obj[1]] =  valor
 
-        grafo_suficiente_alimento = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__suficiente_alimento=obj[0]).count()
-            grafo_suficiente_alimento[obj[1]] =  valor
+    grafo_ayuda = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__ayuda=obj[0]).count()
+        grafo_ayuda[obj[1]] =  valor
 
-        grafo_consumo_diario = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], seguridadalimentaria__consumo_diario=obj[0]).count()
-            grafo_consumo_diario[obj[1]] =  valor
+    grafo_suficiente_alimento = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__suficiente_alimento=obj[0]).count()
+        grafo_suficiente_alimento[obj[1]] =  valor
+
+    grafo_consumo_diario = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(seguridadalimentaria__consumo_diario=obj[0]).count()
+        grafo_consumo_diario[obj[1]] =  valor
 
 
-        conteo_fenomeno = {}
-        for obj in CHOICE_FENOMENOS:
-            valor = filtro.filter(estacion=year[0], respuestano41__fenomeno=obj[0]).count()
-            conteo_fenomeno[obj[1]] =  valor
+    conteo_fenomeno = {}
+    for obj in CHOICE_FENOMENOS:
+        valor = filtro.filter(respuestano41__fenomeno=obj[0]).count()
+        conteo_fenomeno[obj[1]] =  valor
 
-        conteo_agricola = {}
-        for obj in CHOICE_AGRICOLA:
-            valor = filtro.filter(estacion=year[0], respuestano41__agricola=obj[0]).count()
-            conteo_agricola[obj[1]] =  valor
+    conteo_agricola = {}
+    for obj in CHOICE_AGRICOLA:
+        valor = filtro.filter(respuestano41__agricola=obj[0]).count()
+        conteo_agricola[obj[1]] =  valor
 
-        conteo_mercado = {}
-        for obj in CHOICE_MERCADO:
-            valor = filtro.filter(estacion=year[0], respuestano41__mercado=obj[0]).count()
-            conteo_mercado[obj[1]] =  valor
+    conteo_mercado = {}
+    for obj in CHOICE_MERCADO:
+        valor = filtro.filter(respuestano41__mercado=obj[0]).count()
+        conteo_mercado[obj[1]] =  valor
 
-        conteo_inversion = {}
-        for obj in CHOICE_INVERSION:
-            valor = filtro.filter(estacion=year[0], respuestano41__inversion=obj[0]).count()
-            conteo_inversion[obj[1]] =  valor
+    conteo_inversion = {}
+    for obj in CHOICE_INVERSION:
+        valor = filtro.filter(respuestano41__inversion=obj[0]).count()
+        conteo_inversion[obj[1]] =  valor
 
-        grafo_adquiere_agua = {}
-        for obj in AdquiereAgua.objects.all():
-            valor = filtro.filter(estacion=year[0], otrasseguridad__adquiere_agua=obj).count()
-            grafo_adquiere_agua[obj] =  valor
+    grafo_adquiere_agua = {}
+    for obj in AdquiereAgua.objects.all():
+        valor = filtro.filter(otrasseguridad__adquiere_agua=obj).count()
+        grafo_adquiere_agua[obj] =  valor
 
-        grafo_tratamiento_agua = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], otrasseguridad__tratamiento=obj[0]).count()
-            grafo_tratamiento_agua[obj[1]] =  valor
+    grafo_tratamiento_agua = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(otrasseguridad__tratamiento=obj[0]).count()
+        grafo_tratamiento_agua[obj[1]] =  valor
 
-        grafo_tipo_tratamientos = {}
-        for obj in TrataAgua.objects.all():
-            valor = filtro.filter(estacion=year[0], otrasseguridad__tipo_tratamiento=obj).count()
-            grafo_tipo_tratamientos[obj] =  valor
+    grafo_tipo_tratamientos = {}
+    for obj in TrataAgua.objects.all():
+        valor = filtro.filter(otrasseguridad__tipo_tratamiento=obj).count()
+        grafo_tipo_tratamientos[obj] =  valor
 
-        dicc_seguridad[year[1]] = (grafo_economico,
-                                    grafo_secado,
-                                    grafo_tipo_secado,
-                                    grafo_plan_cosecha,
-                                    grafo_ayuda,
-                                    grafo_suficiente_alimento,
-                                    grafo_consumo_diario,
-                                    conteo_fenomeno,
-                                    conteo_agricola,
-                                    conteo_mercado,
-                                    conteo_inversion,
-                                    grafo_adquiere_agua,
-                                    grafo_tratamiento_agua,
-                                    grafo_tipo_tratamientos,
-                                    filtro1)
+    dicc_seguridad['repaara'] = (grafo_economico,
+                                grafo_secado,
+                                grafo_tipo_secado,
+                                grafo_plan_cosecha,
+                                grafo_ayuda,
+                                grafo_suficiente_alimento,
+                                grafo_consumo_diario,
+                                conteo_fenomeno,
+                                conteo_agricola,
+                                conteo_mercado,
+                                conteo_inversion,
+                                grafo_adquiere_agua,
+                                grafo_tratamiento_agua,
+                                grafo_tipo_tratamientos,
+                                filtro1)
 
     return render(request, template, locals())
 
 def genero(request, template="indicadores/genero.html"):
     filtro = _queryset_filtrado(request)
 
-    years = CHOICES_ESTACIONES
-
     dicc_genero = OrderedDict()
-    for year in years:
-        filtro1 = filtro.filter(estacion=year[0]).count()
-        porcentaje_aporta_mujer = OrderedDict()
-        for obj in CHOICER_INGRESO:
-            porcentaje_aporta_mujer[obj[1]] = OrderedDict()
-            for obj2 in CHOICE_PORCENTAJE:
-                valor = filtro.filter(estacion=year[0], genero__tipo=obj[0], genero__porcentaje=obj2[0]).count()
-                if valor > 0:
-                    porcentaje_aporta_mujer[obj[1]][obj2[1]] =  valor
+
+    filtro1 = filtro.count()
+    porcentaje_aporta_mujer = OrderedDict()
+    for obj in CHOICER_INGRESO:
+        porcentaje_aporta_mujer[obj[1]] = OrderedDict()
+        for obj2 in CHOICE_PORCENTAJE:
+            valor = filtro.filter(genero__tipo=obj[0], genero__porcentaje=obj2[0]).count()
+            if valor > 0:
+                porcentaje_aporta_mujer[obj[1]][obj2[1]] =  valor
 
 
-        grafo_credito_mujer = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], genero1__tipo=obj[0]).count()
-            grafo_credito_mujer[obj[1]] =  valor
+    grafo_credito_mujer = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero1__tipo=obj[0]).count()
+        grafo_credito_mujer[obj[1]] =  valor
 
-        grafo_bienes_mujer = {}
-        for obj in CHOICER_COSAS_MUJER:
-            valor_si = filtro.filter(estacion=year[0], genero2__pregunta=obj[0], genero2__respuesta=1).count()
-            valor_no = filtro.filter(estacion=year[0], genero2__pregunta=obj[0], genero2__respuesta=2).count()
-            grafo_bienes_mujer[obj[1]] =  (valor_si, valor_no)
+    grafo_bienes_mujer = {}
+    for obj in CHOICER_COSAS_MUJER:
+        valor_si = filtro.filter(genero2__pregunta=obj[0], genero2__respuesta=1).count()
+        valor_no = filtro.filter(genero2__pregunta=obj[0], genero2__respuesta=2).count()
+        grafo_bienes_mujer[obj[1]] =  (valor_si, valor_no)
 
-        grafo_organizacion_mujer = {}
-        for obj in CHOICE_JEFE:
-            valor = filtro.filter(estacion=year[0], genero3__respuesta=obj[0]).count()
-            grafo_organizacion_mujer[obj[1]] =  valor
+    grafo_organizacion_mujer = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero3__respuesta=obj[0]).count()
+        grafo_organizacion_mujer[obj[1]] =  valor
 
-        mujer_organizacion = {}
-        for obj in OrgComunitarias.objects.all():
-            dato = filtro.filter(estacion=year[0],organizacioncomunitaria__caso_si=obj,entrevistado__jefe=1).count()
-            if dato > 0:
-                mujer_organizacion[obj] = dato
+    mujer_organizacion = {}
+    for obj in OrgComunitarias.objects.all():
+        dato = filtro.filter(organizacioncomunitaria__caso_si=obj,entrevistado__jefe=1).count()
+        if dato > 0:
+            mujer_organizacion[obj] = dato
 
 
-        nivel_educacion_mujer = OrderedDict()
-        for obj in CHOICER_NIVEL_MUJER:
-            valor = filtro.filter(estacion=year[0],genero4__opcion=obj[0]).count()
-            nivel_educacion_mujer[obj[1]] =  valor
+    nivel_educacion_mujer = OrderedDict()
+    for obj in CHOICER_NIVEL_MUJER:
+        valor = filtro.filter(genero4__opcion=obj[0]).count()
+        nivel_educacion_mujer[obj[1]] =  valor
 
-        dicc_genero[year[1]] = (porcentaje_aporta_mujer,
-                                  grafo_credito_mujer,
-                                  grafo_bienes_mujer,
-                                  grafo_organizacion_mujer,
-                                  mujer_organizacion,
-                                  nivel_educacion_mujer,
-                                  filtro1,
-                                  )
+    dicc_genero[year[1]] = (porcentaje_aporta_mujer,
+                              grafo_credito_mujer,
+                              grafo_bienes_mujer,
+                              grafo_organizacion_mujer,
+                              mujer_organizacion,
+                              nivel_educacion_mujer,
+                              filtro1,
+                              )
 
     return render(request, template, locals())
 
