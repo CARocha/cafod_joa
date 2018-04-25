@@ -64,7 +64,7 @@ $(function () {
         xAxis: {
             categories: [
             'Beneficios',
-            
+
             ],
             crosshair: true
         },
@@ -122,7 +122,7 @@ $(function () {
         xAxis: {
             categories: [
             'Organizaciones comunitarias',
-            
+
             ],
             crosshair: true
         },
@@ -169,6 +169,52 @@ $(function () {
     });
 });
 
+$(function () {
+    $('#container3-{{key}}').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Ha recibido capacitación por parte de las org.comunitaria'
+        },
+        credits: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    //distance: -30,
+                    format: '{point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: "",
+            colorByPoint: true,
+            data: [{% for k, v in value.4.items %}
+                        {
+                            name: "{{k}}",
+                            y: {{v}}
+                        },
+                    {% endfor %}
+             ]
+        }]
+    });
+
+});
 </script>
 {% endfor %}
 {% endblock extra_js %}
@@ -187,24 +233,24 @@ $(function () {
                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                                 <ol class="breadcrumb">
                                     <li>
-                                        Indicador  
+                                        Indicador
                                     </li>
                                     <li>
                                         Organización social
                                     </li>
-                                    
+
                                 </ol>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <span class="ver-indicador" >
-                                    
+
                                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         Ver más indicadores <span class="fa fa-search"></span>
                                     </a>
                                 </span>
                             </div>
                         </div>
-                        
+
                     </h4>
                  </div>
                 <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
@@ -245,6 +291,9 @@ $(function () {
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
                                 <div class="grafico-ind" id="container2-{{k}}" width='100%'></div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
+                                <div class="grafico-ind" id="container3-{{k}}" width='100%'></div>
                         </div>
                     </div>
                 </div>

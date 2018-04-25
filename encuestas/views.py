@@ -213,22 +213,27 @@ def organizaciones(request, template="indicadores/organizaciones.html"):
     filtro1 = filtro.count()
     grafo_pertenece = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(organizacioncomunitaria__pertenece=obj[0]).count()
+        valor = filtro.filter(organizacionsocialproductiva__pertenece=obj[0]).count()
         grafo_pertenece[obj[1]] =  valor
 
     grafo_org_comunitarias = {}
     for obj in OrgComunitarias.objects.all():
-        valor = filtro.filter(organizacioncomunitaria__caso_si=obj).count()
+        valor = filtro.filter(organizacionsocialproductiva__caso_si=obj).count()
         if valor > 0:
             grafo_org_comunitarias[obj] =  valor
 
     grafo_beneficios = {}
     for obj in BeneficiosOrganizados.objects.all():
-        valor = filtro.filter(organizacioncomunitaria__cuales_beneficios=obj).count()
+        valor = filtro.filter(organizacionsocialproductiva__cuales_beneficios=obj).count()
         if valor > 0:
             grafo_beneficios[obj] =  valor
 
-    dicc_organizacion['repaarar'] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1)
+    grafo_capacitacion = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(organizacionsocialproductiva__capacitacion=obj[0]).count()
+        grafo_capacitacion[obj[1]] =  valor
+
+    dicc_organizacion['repaarar'] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1,grafo_capacitacion)
 
     return render(request, template, locals())
 
@@ -267,97 +272,61 @@ def practicas(request, template="indicadores/practicas.html"):
 
     return render(request, template, locals())
 
+def uso_tierra(request, template="indicadores/tierra.html"):
+    filtro = _queryset_filtrado(request)
+    filtro1 = filtro.count()
+
+    dicc_tierra = OrderedDict()
+
+    promedio_tierra = filtro.aggregate(promedio=Avg('descripcion__area'))['promedio']
+
+    dicc_tierra['reparar'] = (filtro1)
+
+    return render(request, template, locals())
+
+def practicas(request, template="indicadores/practicas.html"):
+
+    return render(request, template, locals())
+
 def seguridad(request, template="indicadores/seguridad.html"):
     filtro = _queryset_filtrado(request)
 
     dicc_seguridad = OrderedDict()
 
     filtro1 = filtro.count()
-    grafo_economico = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__economico=obj[0]).count()
-        grafo_economico[obj[1]] =  valor
 
-    grafo_secado = {}
+    grafo_disponen = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__secado=obj[0]).count()
-        grafo_secado[obj[1]] =  valor
+        valor = filtro.filter(seguridadalimentaria__disponen=obj[0]).count()
+        grafo_disponen[obj[1]] =  valor
 
-    grafo_tipo_secado = {}
-    for obj in TipoSecado.objects.all():
-        valor = filtro.filter(seguridadalimentaria__tipo_secado=obj).count()
-        grafo_tipo_secado[obj] =  valor
-
-    grafo_plan_cosecha = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__plan_cosecha=obj[0]).count()
-        grafo_plan_cosecha[obj[1]] =  valor
-
-    grafo_ayuda = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__ayuda=obj[0]).count()
-        grafo_ayuda[obj[1]] =  valor
-
-    grafo_suficiente_alimento = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__suficiente_alimento=obj[0]).count()
-        grafo_suficiente_alimento[obj[1]] =  valor
-
-    grafo_consumo_diario = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(seguridadalimentaria__consumo_diario=obj[0]).count()
-        grafo_consumo_diario[obj[1]] =  valor
+    grafo_escasez = {}
+    for obj in CHOICE_ESCASEZ:
+        valor = filtro.filter(seguridadalimentaria__escasez__icontains=obj[0]).count()
+        grafo_escasez[obj[1]] =  valor
 
 
     conteo_fenomeno = {}
     for obj in CHOICE_FENOMENOS:
-        valor = filtro.filter(respuestano41__fenomeno=obj[0]).count()
+        valor = filtro.filter(escasezalimentos__fenomeno__icontains=obj[0]).count()
         conteo_fenomeno[obj[1]] =  valor
 
     conteo_agricola = {}
     for obj in CHOICE_AGRICOLA:
-        valor = filtro.filter(respuestano41__agricola=obj[0]).count()
+        valor = filtro.filter(escasezalimentos__agricola__icontains=obj[0]).count()
         conteo_agricola[obj[1]] =  valor
 
-    conteo_mercado = {}
-    for obj in CHOICE_MERCADO:
-        valor = filtro.filter(respuestano41__mercado=obj[0]).count()
-        conteo_mercado[obj[1]] =  valor
+    conteo_economica = {}
+    for obj in CHOICE_ECONOMICAS:
+        valor = filtro.filter(escasezalimentos__economica__icontains=obj[0]).count()
+        conteo_economica[obj[1]] =  valor
 
-    conteo_inversion = {}
-    for obj in CHOICE_INVERSION:
-        valor = filtro.filter(respuestano41__inversion=obj[0]).count()
-        conteo_inversion[obj[1]] =  valor
 
-    grafo_adquiere_agua = {}
-    for obj in AdquiereAgua.objects.all():
-        valor = filtro.filter(otrasseguridad__adquiere_agua=obj).count()
-        grafo_adquiere_agua[obj] =  valor
-
-    grafo_tratamiento_agua = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(otrasseguridad__tratamiento=obj[0]).count()
-        grafo_tratamiento_agua[obj[1]] =  valor
-
-    grafo_tipo_tratamientos = {}
-    for obj in TrataAgua.objects.all():
-        valor = filtro.filter(otrasseguridad__tipo_tratamiento=obj).count()
-        grafo_tipo_tratamientos[obj] =  valor
-
-    dicc_seguridad['repaara'] = (grafo_economico,
-                                grafo_secado,
-                                grafo_tipo_secado,
-                                grafo_plan_cosecha,
-                                grafo_ayuda,
-                                grafo_suficiente_alimento,
-                                grafo_consumo_diario,
+    dicc_seguridad['repaara'] = (grafo_disponen,
+                                 grafo_escasez,
                                 conteo_fenomeno,
                                 conteo_agricola,
-                                conteo_mercado,
-                                conteo_inversion,
-                                grafo_adquiere_agua,
-                                grafo_tratamiento_agua,
-                                grafo_tipo_tratamientos,
+                                conteo_economica,
                                 filtro1)
 
     return render(request, template, locals())
@@ -368,29 +337,10 @@ def genero(request, template="indicadores/genero.html"):
     dicc_genero = OrderedDict()
 
     filtro1 = filtro.count()
-    porcentaje_aporta_mujer = OrderedDict()
-    for obj in CHOICER_INGRESO:
-        porcentaje_aporta_mujer[obj[1]] = OrderedDict()
-        for obj2 in CHOICE_PORCENTAJE:
-            valor = filtro.filter(genero__tipo=obj[0], genero__porcentaje=obj2[0]).count()
-            if valor > 0:
-                porcentaje_aporta_mujer[obj[1]][obj2[1]] =  valor
 
-
-    grafo_credito_mujer = {}
+    grafo_organizacion_animal = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(genero1__tipo=obj[0]).count()
-        grafo_credito_mujer[obj[1]] =  valor
-
-    grafo_bienes_mujer = {}
-    for obj in CHOICER_COSAS_MUJER:
-        valor_si = filtro.filter(genero2__pregunta=obj[0], genero2__respuesta=1).count()
-        valor_no = filtro.filter(genero2__pregunta=obj[0], genero2__respuesta=2).count()
-        grafo_bienes_mujer[obj[1]] =  (valor_si, valor_no)
-
-    grafo_organizacion_mujer = {}
-    for obj in CHOICE_JEFE:
-        valor = filtro.filter(genero3__respuesta=obj[0]).count()
+        valor = filtro.filter(genero__animal=obj[0]).count()
         grafo_organizacion_mujer[obj[1]] =  valor
 
     mujer_organizacion = {}
@@ -402,7 +352,7 @@ def genero(request, template="indicadores/genero.html"):
 
     nivel_educacion_mujer = OrderedDict()
     for obj in CHOICER_NIVEL_MUJER:
-        valor = filtro.filter(genero4__opcion=obj[0]).count()
+        valor = filtro.filter(genero__opcion=obj[0]).count()
         nivel_educacion_mujer[obj[1]] =  valor
 
     dicc_genero[year[1]] = (porcentaje_aporta_mujer,
