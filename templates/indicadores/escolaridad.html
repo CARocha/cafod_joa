@@ -6,7 +6,7 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
-{% for k,v in dicc_grafo_tipo_educacion.items %}
+{% for k,v in dicc_escolaridad.items %}
 <script>
 $(function () {
     $('#container-{{k}}').highcharts({
@@ -14,7 +14,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Miembros del hogar con algún tipo de escolaridad(jefe) total de personas({{v.2}})'
+            text: 'Parentescos con los encuestados'
         },
         yAxis: {
             title: {
@@ -27,20 +27,20 @@ $(function () {
         yAxis: {
                 min: 0,
                 title: {
-                    text: 'Porcentajes (%)'
+                    text: 'Porcentajes (#)'
                 }
             },
             tooltip: {
                 formatter: function() {
                     return ''+
-                        this.series.name +': '+ this.y +'%';
+                        this.series.name +': '+ this.y;
                 }
             },
         series: [
                 {% for key,value in v.0.items %}
                 {
                     name: '{{key|limpiarSlug}} ({{value}})',
-                    data: [{{value|calculaperct:v.2|floatformat:2}}],
+                    data: [{{value}}],
                     dataLabels: {
                         enabled: true,
                         rotation: 0,
@@ -49,7 +49,7 @@ $(function () {
                         x: -3,
                         y: 0,
                             formatter: function() {
-                                return this.y + '%';
+                                return this.y;
                                                   },
                         style: {
                             font: 'normal 13px Verdana, sans-serif'
@@ -59,13 +59,13 @@ $(function () {
                 {% endfor %}
                 ]
     });
-//grafo mujer
+
      $('#container1-{{k}}').highcharts({
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Miembros del hogar con algún tipo de escolaridad(jefa) total de personas({{v.3}})'
+            text: 'Escolaridad'
         },
         yAxis: {
             title: {
@@ -78,20 +78,20 @@ $(function () {
         yAxis: {
                 min: 0,
                 title: {
-                    text: 'Porcentajes (%)'
+                    text: 'Porcentajes (#)'
                 }
             },
             tooltip: {
                 formatter: function() {
                     return ''+
-                        this.series.name +': '+ this.y +'%';
+                        this.series.name +': '+ this.y;
                 }
             },
         series: [
-                {% for key,value in v.1.items %}
+                {% for key,value in v.2.items %}
                 {
                     name: '{{key|limpiarSlug}} ({{value}})',
-                    data: [{{value|calculaperct:v.3|floatformat:2}}],
+                    data: [{{value}}],
                     dataLabels: {
                         enabled: true,
                         rotation: 0,
@@ -100,7 +100,7 @@ $(function () {
                         x: -3,
                         y: 0,
                             formatter: function() {
-                                return this.y + '%';
+                                return this.y;
                                                   },
                         style: {
                             font: 'normal 13px Verdana, sans-serif'
@@ -110,6 +110,58 @@ $(function () {
                 {% endfor %}
                 ]
     });
+
+$('#container2-{{k}}').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Idiomas'
+        },
+        yAxis: {
+            title: {
+                text: 'Valores'
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        yAxis: {
+                min: 0,
+                title: {
+                    text: 'Porcentajes (#)'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return ''+
+                        this.series.name +': '+ this.y;
+                }
+            },
+        series: [
+                {% for key,value in v.6.items %}
+                {
+                    name: '{{key|limpiarSlug}} ({{value}})',
+                    data: [{{value}}],
+                    dataLabels: {
+                        enabled: true,
+                        rotation: 0,
+                        color: '#632D00',
+                        align: 'center',
+                        x: -3,
+                        y: 0,
+                            formatter: function() {
+                                return this.y;
+                                                  },
+                        style: {
+                            font: 'normal 13px Verdana, sans-serif'
+                                }
+                                }
+                },
+                {% endfor %}
+                ]
+    });
+
 });
 </script>
 {% endfor %}
@@ -161,7 +213,7 @@ $(function () {
               {% for k,v in dicc_escolaridad.items %}
 
                  <li class="col-xs-6 col-sm-4 col-md-2 col-lg-2 {% if forloop.counter == 1 %}active{% endif %}" role="presentation">
-                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.2}})</a>
+                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.3}})</a>
                  </li>
               {% endfor %}
 
@@ -175,6 +227,14 @@ $(function () {
           {% for k,v in dicc_escolaridad.items %}
             <div role="tabpanel" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}" id="home-{{k}}">
                 <div class="container">
+                    <div class="row fila-grafico">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                            <div class="grafico-ind">Cantidad de personas que habitan en el hogar: {{v.3}}</div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                            <div class="grafico-ind">¿Cuántas personas dependen economicamente del encuestado/a?: {{v.4}}</div>
+                        </div>
+                    </div>
                     <div class="row fila-grafico1">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
                              <div class="grafico-ind" id="container-{{k}}" width='100%'></div>
@@ -182,72 +242,10 @@ $(function () {
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
                             <div class="grafico-ind" id="container1-{{k}}" width='100%'></div>
                         </div>
-                    </div>
-                    <div class="row fila-grafico">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
-                            <div class="excel">
-                                <a href="#" onclick="exportarXLS('modalidad-{{k}}'); return false;"><span class="fa fa-download"> Exportar a excel</span></a>
-                            </div>
-                            <div class="table-responsive" id="modalidad-{{k}}">
-                                <table class="table table-bordered table-hover" cellspacing="0" width="100%">
-                                    <caption>Escolaridad jefe de hogar</caption>
-                                    <thead>
-                                        <tr>
-                                            <th>Edades</th>
-                                            <th>Número total</th>
-                                            <th>No sabe leer %</th>
-                                            <th>Primaria incompleta %</th>
-                                            <th>Primaria completa %</th>
-                                            <th>Secundaria incompleta %</th>
-                                            <th>Bachiller %</th>
-                                            <th>Universitario %</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {%for fila in v.0%}
-                                        <tr>
-                                            {%for celda in fila %}
-                                            <td>{{celda|default:'0'}}</td>
-                                            {%endfor%}
-                                        </tr>
-                                        {%endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 space">
-                            <div class="excel">
-                                <a href="#" onclick="exportarXLS('modalidad1-{{k}}'); return false;"><span class="fa fa-download"> Exportar a excel</span></a>
-                            </div>
-                            <div class="table-responsive" id="modalidad1-{{k}}">
-                                <table class="table table-bordered table-hover" cellspacing="0" width="100%">
-                                        <caption>Escolaridad jefa de hogar</caption>
-                                        <thead>
-                                            <tr>
-                                                <th>Edades</th>
-                                                <th>Número total</th>
-                                                <th>No sabe leer %</th>
-                                                <th>Primaria incompleta %</th>
-                                                <th>Primaria completa %</th>
-                                                <th>Secundaria incompleta %</th>
-                                                <th>Bachiller %</th>
-                                                <th>Universitario %</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {%for fila in v.1%}
-                                            <tr>
-                                                {%for celda in fila %}
-                                                <td>{{celda|default:'0'}}</td>
-                                                {%endfor%}
-                                            </tr>
-                                            {%endfor%}
-                                        </tbody>
-                                </table>
-                            </div>
+                            <div class="grafico-ind" id="container2-{{k}}" width='100%'></div>
                         </div>
                     </div>
-
 
                 </div> <!-- fin el row inicial -->
             </div> <!-- role tabpanel -->

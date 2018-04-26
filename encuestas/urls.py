@@ -6,10 +6,9 @@ urlpatterns = [
     #otros indicadores
     url(r'^jefe_sexo/$', views.sexo_duenos, name='jefe-sexo'),
     url(r'^escolaridad/$', views.escolaridad, name='escolaridad'),
-    url(r'^energia/$', views.energia, name='energia'),
     url(r'^agua/$', views.agua, name='agua'),
     url(r'^organizaciones/$', views.organizaciones, name='organizaciones'),
-    url(r'^tierra/$', views.uso_tierra, name='tierra'),
+    url(r'^tierra/$', views.tierra, name='tierra'),
     url(r'^practicas/$', views.practicas, name='practicas'),
     url(r'^seguridad/$', views.seguridad, name='seguridad'),
     url(r'^genero/$', views.genero, name='genero'),

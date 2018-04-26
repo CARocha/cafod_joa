@@ -113,10 +113,7 @@ def sexo_duenos(request, template="indicadores/sexo_duenos.html"):
         if conteos > 0:
             detalle_edad[obj[1]] = conteos
 
-    cantidad_habitan = filtro.aggregate(t=Avg('detallemiembros__cantidad'))['t']
-    cantidad_dependen = filtro.aggregate(t=Avg('detallemiembros__cantidad_dependen'))['t']
-
-    dicc_sexo_dueno[anio] = (si_dueno,no_dueno,a_nombre,situacion,detalle_edad,filtro1,cantidad_habitan,cantidad_dependen)
+    dicc_sexo_dueno[anio] = (si_dueno,no_dueno,a_nombre,situacion,detalle_edad,filtro1)
 
     return render(request, template, locals())
 
@@ -124,59 +121,39 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
     filtro = _queryset_filtrado(request)
 
     dicc_escolaridad = OrderedDict()
-    dicc_grafo_tipo_educacion = OrderedDict()
 
     filtro1 = filtro.count()
 
-    tabla_educacion_hombre = OrderedDict()
+    cantidad_habitan = filtro.aggregate(t=Avg('detallemiembros__cantidad'))['t']
+    cantidad_dependen = filtro.aggregate(t=Avg('detallemiembros__cantidad_dependen'))['t']
+
+    tabla_parentesco = OrderedDict()
+    for e in CHOICE_PARENTESCO:
+        objeto = filtro.filter(
+                condicionesvida__parentesco=e[0]).count()
+        tabla_parentesco[e[1]] = objeto
+
+    tabla_sexo = OrderedDict()
+    for e in CHOICE_SEXO1:
+        objeto = filtro.filter(
+                condicionesvida__sexo=e[0]).count()
+        tabla_sexo[e[1]] = objeto
+
+    tabla_educacion = OrderedDict()
     for e in CHOICE_ESCOLARIDAD:
         objeto = filtro.filter(
-                entrevistado__sexo=2,
-                entrevistado__jefe=1,
                 condicionesvida__escolaridad=e[0]).count()
-        tabla_educacion_hombre[e[1]] = objeto
+        tabla_educacion[e[1]] = objeto
 
-    #tabla para cuando la mujer es jefe
-
-    tabla_educacion_mujer = OrderedDict()
-    for e in CHOICE_ESCOLARIDAD:
+    tabla_idioma = OrderedDict()
+    for e in Idiomas.objects.all():
         objeto = filtro.filter(
-                entrevistado__sexo=1,
-                entrevistado__jefe=1,
-                condicionesvida__escolaridad=e[0]).count()
-        tabla_educacion_mujer[e[1]] = objeto
+                condicionesvida__idioma=e).count()
+        tabla_idioma[e.nombre] = objeto
 
-    dicc_escolaridad['reaparar'] = (tabla_educacion_hombre,tabla_educacion_mujer,filtro1)
-
-    return render(request, template, locals())
-
-def energia(request, template="indicadores/energia.html"):
-    filtro = _queryset_filtrado(request)
-
-    dicc_energia = OrderedDict()
-
-    filtro1 = filtro.count()
-    grafo_tipo_energia = {}
-    for obj in Energia.objects.all():
-        valor = filtro.filter(tipoenergia__tipo=obj).count()
-        grafo_tipo_energia[obj] =  valor
-
-    grafo_panel_solar = {}
-    for obj in CHOICE_PANEL_SOLAR:
-        valor = filtro.filter(panelsolar__panel=obj[0]).count()
-        grafo_panel_solar[obj[1]] =  valor
-
-    grafo_fuente_energia = {}
-    for obj in FuenteEnergia.objects.all():
-        valor = filtro.filter(energiasolarcocinar__fuente=obj).count()
-        grafo_fuente_energia[obj] =  valor
-
-    grafo_tipo_cocina = {}
-    for obj in Cocinas.objects.all():
-        valor = filtro.filter(tipococinas__cocina=obj).count()
-        grafo_tipo_cocina[obj] =  valor
-
-    dicc_energia[year[1]] = (grafo_tipo_energia,grafo_panel_solar,grafo_fuente_energia,grafo_tipo_cocina,filtro1)
+    dicc_escolaridad['reaparar'] = (tabla_parentesco,tabla_sexo,tabla_educacion,
+                                    filtro1,cantidad_habitan,cantidad_dependen,
+                                    tabla_idioma)
 
     return render(request, template, locals())
 
@@ -201,7 +178,11 @@ def agua(request, template="indicadores/agua.html"):
         valor = filtro.filter(usosagua__uso__icontains=obj[0]).count()
         grafo_agua_usos[obj[1]] =  valor
 
-    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,grafo_agua_usos,filtro1)
+
+    promedio_acarreo = 0
+
+    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,
+                            grafo_agua_usos,filtro1,promedio_acarreo)
 
     return render(request, template, locals())
 
@@ -237,6 +218,29 @@ def organizaciones(request, template="indicadores/organizaciones.html"):
 
     return render(request, template, locals())
 
+def tierra(request, template="indicadores/tierra.html"):
+    filtro = _queryset_filtrado(request)
+
+    dicc_tierra = OrderedDict()
+    #tabla distribucion de frecuencia
+    filtro1 = filtro.count()
+    uno_num = filtro.filter(descripcion__area__range=(0.1,5.99)).count()
+    seis_num = filtro.filter(descripcion__area__range=(6,10.99)).count()
+    diez_mas = filtro.filter(descripcion__area__gt=11).count()
+
+    #promedio de manzanas por todas las personas
+    promedio_mz = filtro.aggregate(promedio=Avg('descripcion__area'))['promedio']
+
+    grafo_distribucion_tierra = {}
+    for obj in CHOICE_TIERRA:
+        valor = filtro.filter(distribucionupf__tierra=obj[0]).count()
+        grafo_distribucion_tierra[obj[1]] =  valor
+
+    dicc_tierra['reparar'] = (uno_num,seis_num,diez_mas,promedio_mz,grafo_distribucion_tierra,filtro1)
+
+
+    return render(request, template, locals())
+
 def practicas(request, template="indicadores/practicas.html"):
     filtro = _queryset_filtrado(request)
 
@@ -269,18 +273,6 @@ def practicas(request, template="indicadores/practicas.html"):
         grafo_control[obj[1]] =  valor
 
     dicc_practicas['reparar'] = (grafo_practicas_sino,grafo_manejo,grafo_traccion,grafo_fertilidad,grafo_control,filtro1)
-
-    return render(request, template, locals())
-
-def uso_tierra(request, template="indicadores/tierra.html"):
-    filtro = _queryset_filtrado(request)
-    filtro1 = filtro.count()
-
-    dicc_tierra = OrderedDict()
-
-    promedio_tierra = filtro.aggregate(promedio=Avg('descripcion__area'))['promedio']
-
-    dicc_tierra['reparar'] = (filtro1)
 
     return render(request, template, locals())
 

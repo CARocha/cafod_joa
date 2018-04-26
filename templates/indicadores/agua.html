@@ -71,7 +71,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: 'Disponibilidad de agua para consumo humano (verano)'
+            text: 'Disponibilidad de agua para consumo humano'
         },
         subtitle: {
             text: ''
@@ -123,7 +123,7 @@ $(function () {
             type: 'column'
         },
         title: {
-            text: '¿Cómo es la calidad del agua que consume?'
+            text: 'Indique qué otros usos le dan al agua en la UPF'
         },
         subtitle: {
             text: ''
@@ -164,172 +164,6 @@ $(function () {
                 	name: "{{k}}",
                 	y: {{v}},
             	},
-            {% endfor %}
-            ]
-        }],
-    });
-
-	// Create the chart
-    $('#container3-{{key}}').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Si esta contaminada, señale posibles causas'
-        },
-        subtitle: {
-            text: ''
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Frecuencias'
-            }
-
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y:.1f}'
-                }
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
-        },
-
-        series: [{
-            name: "",
-            colorByPoint: true,
-            data: [
-            {% for k,v in value.3.items %}
-            	{
-                	name: "{{k}}",
-                	y: {{v}},
-            	},
-            {% endfor %}
-            ]
-        }],
-    });
-
-	// Create the chart
-
-
-$(function () {
-    $('#container4-{{key}}').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: '¿Realiza algún tratamiento al agua que consume?'
-        },
-        xAxis: {
-            categories: [
-            'Tratamiento al agua de consumo',
-
-            ],
-            crosshair: true
-        },
-        yAxis: {
-            title: {
-                text: 'Frecuencias'
-            }
-
-        },
-        credits: {
-            enabled: false
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
-        },
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y:.2f}',
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
-                    style: {
-                        textShadow: '0 0 3px white'
-                    }
-                }
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
-        },
-        series: [
-            {% for k,v in value.4.items %}
-                {
-                    name: "{{k}}",
-                    data: [{{v}}],
-                },
-            {% endfor %}
-          ]
-    });
-});
-
-
-    // Create the chart
-    $('#container5-{{key}}').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Otros usos del agua en la finca'
-        },
-        subtitle: {
-            text: ''
-        },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Frecuencias'
-            }
-
-        },
-        legend: {
-            enabled: false
-        },
-        plotOptions: {
-            series: {
-                borderWidth: 0,
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.y:.1f}'
-                }
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
-        },
-
-        series: [{
-            name: "",
-            colorByPoint: true,
-            data: [
-            {% for k,v in value.5.items %}
-                {
-                    name: "{{k}}",
-                    y: {{v}},
-                },
             {% endfor %}
             ]
         }],
@@ -414,15 +248,7 @@ $(function () {
                                 <div class="grafico-ind" id="container2-{{k}}" width='100%'></div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-                                <div class="grafico-ind" id="container3-{{k}}" width='100%'></div>
-                            </div>
-                        </div>
-                        <div class="row fila-grafico">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-                                <div class="grafico-ind" id="container4-{{k}}" width='100%'></div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-                                <div class="grafico-ind" id="container5-{{k}}" width='100%'></div>
+                                <div class="grafico-ind">Promedio de tiempo invertido para acarrear agua: {{v.4}}</div>
                             </div>
                         </div>
                     </div>
