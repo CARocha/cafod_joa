@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^agua/$', views.agua, name='agua'),
     url(r'^organizaciones/$', views.organizaciones, name='organizaciones'),
     url(r'^tierra/$', views.tierra, name='tierra'),
+    url(r'^cultivos/$', views.cultivos, name='tierra'),
     url(r'^practicas/$', views.practicas, name='practicas'),
     url(r'^seguridad/$', views.seguridad, name='seguridad'),
     url(r'^genero/$', views.genero, name='genero'),

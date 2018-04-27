@@ -15,7 +15,7 @@ $(function () {
             type: 'pie'
         },
         title: {
-            text: '¿Realiza prácticas agroecológicas en la finca? '
+            text: 'En la UPF usan practicas de manejo agroecológicas'
         },
         credits: {
             enabled: false
@@ -54,7 +54,7 @@ $('#container1-{{key}}').highcharts({
             type: 'column'
         },
         title: {
-            text: 'Preparación del suelo para la siembra'
+            text: 'Responde si'
         },
         subtitle: {
             text: ''
@@ -105,10 +105,52 @@ $('#container1-{{key}}').highcharts({
 
 $('#container2-{{key}}').highcharts({
         chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'En la UPF usan practicas de manejo agroforestal'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "",
+            colorByPoint: true,
+            data: [ {% for k,v  in  value.2.items %}
+                        {
+                            name: "{{k}}",
+                            y: {{v}}
+                        },
+                        {% endfor %}
+                    ]
+        }]
+    });
+
+$('#container3-{{key}}').highcharts({
+        chart: {
             type: 'column'
         },
         title: {
-            text: 'Tracción que utiliza para preparar el suelo'
+            text: 'Responde si'
         },
         subtitle: {
             text: ''
@@ -147,7 +189,7 @@ $('#container2-{{key}}').highcharts({
             name: "",
             colorByPoint: true,
             data: [
-            {% for k,v in value.2.items %}
+            {% for k,v in value.3.items %}
                 {
                     name: "{{k}}",
                     y: {{v}},
@@ -157,49 +199,6 @@ $('#container2-{{key}}').highcharts({
         }],
     });
 
-$('#container3-{{key}}').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: '¿Realizan análisis de fertilidad de suelo? '
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        credits: {
-            enabled: false
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-            name: "",
-            colorByPoint: true,
-            data: [ {% for k,v  in  value.3.items %}
-                        {
-                            name: "{{k}}",
-                            y: {{v}}
-                        },
-                        {% endfor %}
-                    ]
-        }]
-    });
-
-
 $('#container4-{{key}}').highcharts({
         chart: {
             plotBackgroundColor: null,
@@ -208,7 +207,7 @@ $('#container4-{{key}}').highcharts({
             type: 'pie'
         },
         title: {
-            text: '¿Realizan control de plagas y enfermedades?'
+            text: 'En la UPF usan practicas agricolas ancestrales'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -242,6 +241,156 @@ $('#container4-{{key}}').highcharts({
         }]
     });
 
+$('#container5-{{key}}').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Responde si'
+        },
+        subtitle: {
+            text: ''
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Frecuencias'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+        },
+
+        series: [{
+            name: "",
+            colorByPoint: true,
+            data: [
+            {% for k,v in value.5.items %}
+                {
+                    name: "{{k}}",
+                    y: {{v}},
+                },
+            {% endfor %}
+            ]
+        }],
+    });
+
+$('#container6-{{key}}').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Pertenece a alguna forma de gobernanza indígena'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        credits: {
+            enabled: false
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "",
+            colorByPoint: true,
+            data: [ {% for k,v  in  value.6.items %}
+                        {
+                            name: "{{k}}",
+                            y: {{v}}
+                        },
+                        {% endfor %}
+                    ]
+        }]
+    });
+
+$('#container7-{{key}}').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Responde si'
+        },
+        subtitle: {
+            text: ''
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Frecuencias'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+        },
+
+        series: [{
+            name: "",
+            colorByPoint: true,
+            data: [
+            {% for k,v in value.7.items %}
+                {
+                    name: "{{k}}",
+                    y: {{v}},
+                },
+            {% endfor %}
+            ]
+        }],
+    });
+
 });
 </script>
 {% endfor %}
@@ -261,24 +410,24 @@ $('#container4-{{key}}').highcharts({
                             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
                                 <ol class="breadcrumb">
                                     <li>
-                                        Indicador  
+                                        Indicador
                                     </li>
                                     <li>
                                         Prácticas agroecológicas
                                     </li>
-                                    
+
                                 </ol>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <span class="ver-indicador" >
-                                    
+
                                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         Ver más indicadores <span class="fa fa-search"></span>
                                     </a>
                                 </span>
                             </div>
                         </div>
-                        
+
                     </h4>
                  </div>
                 <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
@@ -296,7 +445,7 @@ $('#container4-{{key}}').highcharts({
                {% for k,v in dicc_practicas.items %}
 
                  <li class="col-xs-6 col-sm-4 col-md-2 col-lg-2 {% if forloop.counter == 1 %}active{% endif %}" role="presentation">
-                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.5}})</a>
+                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.8}})</a>
                  </li>
               {% endfor %}
 
@@ -329,6 +478,17 @@ $('#container4-{{key}}').highcharts({
                         <div class="row fila-grafico">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
                                 <div class="grafico-ind" id="container4-{{k}}" style="min-width: 310px; height: 400px; width: 550px; margin: 0 auto"></div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                                <div class="grafico-ind" id="container5-{{k}}" width="100%"></div>
+                            </div>
+                        </div>
+                        <div class="row fila-grafico">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                                <div class="grafico-ind" id="container6-{{k}}" style="min-width: 310px; height: 400px; width: 550px; margin: 0 auto"></div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                                <div class="grafico-ind" id="container7-{{k}}" width="100%"></div>
                             </div>
                         </div>
                     </div>

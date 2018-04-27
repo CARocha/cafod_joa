@@ -241,42 +241,124 @@ def tierra(request, template="indicadores/tierra.html"):
 
     return render(request, template, locals())
 
+def cultivos(request, template='indicadores/productividad.html'):
+    filtro = _queryset_filtrado(request)
+    filtro1 = filtro.count()
+
+    dicc_anuales = OrderedDict()
+    for obj in Cultivos.objects.all():
+        cultivo = filtro.filter(cultivosanuales__cultivo=obj)
+        total_area_sembrada = cultivo.aggregate(t=Sum('cultivosanuales__area_sembrada'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Sum('cultivosanuales__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Sum('cultivosanuales__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Sum('cultivosanuales__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Sum('cultivosanuales__venta'))['t']
+
+        dicc_anuales[obj] = {'unidad':obj.get_unidad_medida_display(),
+                            'total_area_sembrada':total_area_sembrada,
+                            'total_cantidad_cosechada':total_cantidad_cosechada,
+                            'total_consumo_familia':total_consumo_familia,
+                            'total_consumo_animal':total_consumo_animal,
+                            'total_venta':total_venta}
+
+    dicc_huertos = OrderedDict()
+    for obj in CultivosHuertos.objects.all():
+        cultivo = filtro.filter(cultivoshuerto__cultivo=obj)
+        total_area_sembrada = cultivo.aggregate(t=Sum('cultivoshuerto__area_sembrada'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Sum('cultivoshuerto__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Sum('cultivoshuerto__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Sum('cultivoshuerto__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Sum('cultivoshuerto__venta'))['t']
+
+        dicc_huertos[obj] = {'unidad':obj.get_unidad_medida_display(),
+                            'total_area_sembrada':total_area_sembrada,
+                            'total_cantidad_cosechada':total_cantidad_cosechada,
+                            'total_consumo_familia':total_consumo_familia,
+                            'total_consumo_animal':total_consumo_animal,
+                            'total_venta':total_venta}
+
+    dicc_frutas = OrderedDict()
+    for obj in Frutas.objects.all():
+        cultivo = filtro.filter(frutascultivosperennes__cultivo=obj)
+        total_cantidad_cosechada = cultivo.aggregate(t=Sum('frutascultivosperennes__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Sum('frutascultivosperennes__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Sum('frutascultivosperennes__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Sum('frutascultivosperennes__venta'))['t']
+
+        dicc_frutas[obj] = {'unidad':obj.get_unidad_medida_display(),
+                            'total_cantidad_cosechada':total_cantidad_cosechada,
+                            'total_consumo_familia':total_consumo_familia,
+                            'total_consumo_animal':total_consumo_animal,
+                            'total_venta':total_venta}
+
+    dicc_ganaderia = OrderedDict()
+    for obj in Animales.objects.all():
+        cultivo = filtro.filter(ganaderia__animal=obj)
+        total_cantidad_cosechada = cultivo.aggregate(t=Sum('ganaderia__cantidad'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Sum('ganaderia__cantidad_actual'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Sum('ganaderia__consumo'))['t']
+        total_venta = cultivo.aggregate(t=Sum('ganaderia__cantidad_vendida'))['t']
+
+        dicc_ganaderia[obj] = {'total_cantidad_cosechada':total_cantidad_cosechada,
+                            'total_consumo_familia':total_consumo_familia,
+                            'total_consumo_animal':total_consumo_animal,
+                            'total_venta':total_venta}
+
+
+    return render(request, template, locals())
+
 def practicas(request, template="indicadores/practicas.html"):
     filtro = _queryset_filtrado(request)
 
     dicc_practicas = OrderedDict()
 
     filtro1 = filtro.count()
-    grafo_practicas_sino = {}
+    grafo_practicas_sino_agroecologica = {}
     for obj in CHOICE_JEFE:
         valor = filtro.filter(practicasagroecologicas__si_no=obj[0]).count()
-        grafo_practicas_sino[obj[1]] =  valor
+        grafo_practicas_sino_agroecologica[obj[1]] =  valor
 
-    grafo_manejo = {}
-    for obj in CHOICE_MANEJO:
-        valor = filtro.filter(practicasagroecologicas__manejo=obj[0]).count()
-        grafo_manejo[obj[1]] =  valor
+    grafo_practica_agroecologica_si = {}
+    for obj in CHOICE_PRACTICAS:
+        valor = filtro.filter(practicasagroecologicas__responde_si__icontains=obj[0]).count()
+        grafo_practica_agroecologica_si[obj[1]] = valor
 
-    grafo_traccion = {}
-    for obj in CHOICE_TRACCION:
-        valor = filtro.filter(practicasagroecologicas__traccion=obj[0]).count()
-        grafo_traccion[obj[1]] =  valor
-
-    grafo_fertilidad = {}
+    grafo_practicas_sino_agroforestal = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(practicasagroecologicas__fertilidad=obj[0]).count()
-        grafo_fertilidad[obj[1]] =  valor
+        valor = filtro.filter(manejoagroforestal__si_no=obj[0]).count()
+        grafo_practicas_sino_agroforestal[obj[1]] =  valor
 
-    grafo_control = {}
+    grafo_practica_agroforestal_si = {}
+    for obj in CHOICE_AGROFORESTAL:
+        valor = filtro.filter(manejoagroforestal__responde_si__icontains=obj[0]).count()
+        grafo_practica_agroforestal_si[obj[1]] = valor
+
+    grafo_practicas_sino_ancentral = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(practicasagroecologicas__control=obj[0]).count()
-        grafo_control[obj[1]] =  valor
+        valor = filtro.filter(practicasagricolasancestrales__si_no=obj[0]).count()
+        grafo_practicas_sino_ancentral[obj[1]] =  valor
 
-    dicc_practicas['reparar'] = (grafo_practicas_sino,grafo_manejo,grafo_traccion,grafo_fertilidad,grafo_control,filtro1)
+    grafo_practica_ancestral_si = {}
+    for obj in CHOICE_AGRICOLAS_ANCESTRALES:
+        valor = filtro.filter(practicasagricolasancestrales__responde_si__icontains=obj[0]).count()
+        grafo_practica_ancestral_si[obj[1]] = valor
 
-    return render(request, template, locals())
+    grafo_practicas_sino_gobernanza = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(pertenecegobernanza__si_no=obj[0]).count()
+        grafo_practicas_sino_gobernanza[obj[1]] =  valor
 
-def practicas(request, template="indicadores/practicas.html"):
+    grafo_practica_gobernanza_si = {}
+    for obj in FormaGobernanza.objects.all():
+        valor = filtro.filter(pertenecegobernanza__responde_si=obj).count()
+        grafo_practica_gobernanza_si[obj.nombre] = valor
+
+
+    dicc_practicas['reparar'] = (grafo_practicas_sino_agroecologica,grafo_practica_agroecologica_si,
+                                grafo_practicas_sino_agroforestal,grafo_practica_agroforestal_si,
+                                grafo_practicas_sino_ancentral,grafo_practica_ancestral_si,
+                                grafo_practicas_sino_gobernanza,grafo_practica_gobernanza_si,
+                                filtro1)
 
     return render(request, template, locals())
 
