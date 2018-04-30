@@ -30,9 +30,6 @@ def _queryset_filtrado(request):
     if 'comunidad' in request.session:
         params['entrevistado__comunidad__in'] = request.session['comunidad']
 
-    #if request.session['sexo']:
-    #    params['entrevistado__sexo'] = request.session['sexo']
-
     unvalid_keys = []
     for key in params:
         if not params[key]:
@@ -62,7 +59,7 @@ def indicadores1(request, template='indicadores1.html'):
             mensaje = "Todas las variables estan correctamente :)"
             request.session['activo'] = True
             centinela = 1
-            request.session['encuestados'] = len(_queryset_filtrado(request))
+            #request.session['encuestados'] = len(_queryset_filtrado(request))
             print mensaje
 
         else:
