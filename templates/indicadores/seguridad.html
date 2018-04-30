@@ -14,7 +14,7 @@ $('#container-{{key}}').highcharts({
             type: 'column'
         },
         title: {
-            text: 'En tiempo de sequía, ¿cómo adquiere el agua para consumo?'
+            text: 'Qué es lo que hace cuando hay escasez de alimentos en la familia'
         },
         subtitle: {
             text: ''
@@ -53,7 +53,7 @@ $('#container-{{key}}').highcharts({
             name: "",
             colorByPoint: true,
             data: [
-            {% for k,v in value.11.items %}
+            {% for k,v in value.1.items %}
                 {
                     name: "{{k}}",
                     y: {{v}},
@@ -72,7 +72,7 @@ $('#container1-{{key}}').highcharts({
             type: 'pie'
         },
         title: {
-            text: '¿Da algún tipo de tratamiento al agua para consumo? '
+            text: 'Dispone de suficiente recursos economicos para manejar su UPF'
         },
         credits: {
             enabled: false
@@ -96,7 +96,7 @@ $('#container1-{{key}}').highcharts({
         series: [{
             name: "",
             colorByPoint: true,
-            data: [ {% for k,v  in  value.12.items %}
+            data: [ {% for k,v  in  value.0.items %}
                         {
                             name: "{{k}}",
                             y: {{v}}
@@ -108,56 +108,44 @@ $('#container1-{{key}}').highcharts({
 
 $('#container2-{{key}}').highcharts({
         chart: {
-            type: 'column'
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
         },
         title: {
-            text: 'Tipos de tratamientos que se les da al agua'
-        },
-        subtitle: {
-            text: ''
+            text: 'Cuenta siempre con suficientes alimentos,'
         },
         credits: {
             enabled: false
         },
-        xAxis: {
-            type: 'category'
-        },
-        yAxis: {
-            title: {
-                text: 'Frecuencias'
-            }
-
-        },
-        legend: {
-            enabled: false
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
         },
         plotOptions: {
-            series: {
-                borderWidth: 0,
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '{point.y:.1f}'
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
                 }
             }
         },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
-        },
-
         series: [{
             name: "",
             colorByPoint: true,
-            data: [
-            {% for k,v in value.13.items %}
-                {
-                    name: "{{k}}",
-                    y: {{v}},
-                },
-            {% endfor %}
-            ]
-        }],
+            data: [ {% for k,v  in  value.6.items %}
+                        {
+                            name: "{{k}}",
+                            y: {{v}}
+                        },
+                        {% endfor %}
+                    ]
+        }]
     });
 
 
@@ -215,7 +203,7 @@ $('#container2-{{key}}').highcharts({
               {% for k,v in dicc_seguridad.items %}
 
                  <li class="col-xs-6 col-sm-4 col-md-2 col-lg-2 {% if forloop.counter == 1 %}active{% endif %}" role="presentation">
-                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.14}})</a>
+                    <a class="btn btn-anos" href="#home-{{k}}" aria-controls="home{{forloop.counter}}" role="tab" data-toggle="tab">{{k}}- fam({{v.5}})</a>
                  </li>
               {% endfor %}
 
@@ -247,7 +235,7 @@ $('#container2-{{key}}').highcharts({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for k,v in v.7.items %}
+                                    {% for k,v in v.2.items %}
                                     <tr>
                                         <td>{{k}}</td>
                                         <td>{{v}}</td>
@@ -273,7 +261,7 @@ $('#container2-{{key}}').highcharts({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for k,v in v.9.items %}
+                                    {% for k,v in v.3.items %}
                                     <tr>
                                         <td>{{k}}</td>
                                         <td>{{v}}</td>
@@ -302,7 +290,7 @@ $('#container2-{{key}}').highcharts({
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for k,v in v.8.items %}
+                                    {% for k,v in v.4.items %}
                                     <tr>
                                         <td>{{k}}</td>
                                         <td>{{v}}</td>
@@ -313,32 +301,7 @@ $('#container2-{{key}}').highcharts({
                             </table>
                          </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-                    <div class="excel">
-                        <a href="#" onclick="exportarXLS('modalidad3-{{k}}'); return false;"><span class="fa fa-download"> Exportar a excel</span></a>
-                    </div>
-                     <div class="table-responsive" id="modalidad3-{{k}}">
-                        <table class="table table-bordered table-hover" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Razones de inversión</th>
-                                    <th>Frecuencias</th>
-                                    <th>Porcentajes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for k,v in v.10.items %}
-                                <tr>
-                                    <td>{{k}}</td>
-                                    <td>{{v}}</td>
-                                    <td>{{v|calculaperct:request.session.encuestados|floatformat:2}} %</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                     </div>
 
-                    </div>
                 </div>
                 <div class="row fila-grafico">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">

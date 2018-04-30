@@ -379,6 +379,11 @@ def seguridad(request, template="indicadores/seguridad.html"):
         valor = filtro.filter(seguridadalimentaria__escasez__icontains=obj[0]).count()
         grafo_escasez[obj[1]] =  valor
 
+    grafo_considera = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(escasezalimentos__considera=obj[0]).count()
+        grafo_considera[obj[1]] =  valor
+
 
     conteo_fenomeno = {}
     for obj in CHOICE_FENOMENOS:
@@ -396,12 +401,13 @@ def seguridad(request, template="indicadores/seguridad.html"):
         conteo_economica[obj[1]] =  valor
 
 
-    dicc_seguridad['repaara'] = (grafo_disponen,
+    dicc_seguridad['reparar'] = (grafo_disponen,
                                  grafo_escasez,
                                 conteo_fenomeno,
                                 conteo_agricola,
                                 conteo_economica,
-                                filtro1)
+                                filtro1,
+                                grafo_considera)
 
     return render(request, template, locals())
 
@@ -414,27 +420,17 @@ def genero(request, template="indicadores/genero.html"):
 
     grafo_organizacion_animal = {}
     for obj in CHOICE_JEFE:
-        valor = filtro.filter(genero__animal=obj[0]).count()
-        grafo_organizacion_mujer[obj[1]] =  valor
+        valor = filtro.filter(genero__animales=obj[0]).count()
+        grafo_organizacion_animal[obj[1]] =  valor
 
     mujer_organizacion = {}
-    for obj in OrgComunitarias.objects.all():
-        dato = filtro.filter(organizacioncomunitaria__caso_si=obj,entrevistado__jefe=1).count()
+    for obj in GeneroOrgComunitaria.objects.all():
+        dato = filtro.filter(genero__cual_comunitaria=obj).count()
         if dato > 0:
             mujer_organizacion[obj] = dato
 
-
-    nivel_educacion_mujer = OrderedDict()
-    for obj in CHOICER_NIVEL_MUJER:
-        valor = filtro.filter(genero__opcion=obj[0]).count()
-        nivel_educacion_mujer[obj[1]] =  valor
-
-    dicc_genero[year[1]] = (porcentaje_aporta_mujer,
-                              grafo_credito_mujer,
-                              grafo_bienes_mujer,
-                              grafo_organizacion_mujer,
+    dicc_genero['reparar'] = (
                               mujer_organizacion,
-                              nivel_educacion_mujer,
                               filtro1,
                               )
 
