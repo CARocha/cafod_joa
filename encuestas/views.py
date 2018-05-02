@@ -415,10 +415,35 @@ def genero(request, template="indicadores/genero.html"):
 
     filtro1 = filtro.count()
 
-    grafo_organizacion_animal = {}
+    grafo_genero_actividades = {}
+    for obj in CHOICE_ACTIVIDADES_MUJERES:
+        valor = filtro.filter(genero__actividades__icontains=obj[0]).count()
+        grafo_genero_actividades[obj[1]] = valor
+
+    grafo_genero_animal = {}
     for obj in CHOICE_JEFE:
         valor = filtro.filter(genero__animales=obj[0]).count()
-        grafo_organizacion_animal[obj[1]] =  valor
+        grafo_genero_animal[obj[1]] =  valor
+
+    grafo_genero_equipo = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero__equipos=obj[0]).count()
+        grafo_genero_equipo[obj[1]] =  valor
+
+    grafo_genero_transporte = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero__transporte=obj[0]).count()
+        grafo_genero_transporte[obj[1]] =  valor
+
+    grafo_genero_tierra = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero__tierra=obj[0]).count()
+        grafo_genero_tierra[obj[1]] =  valor
+
+    grafo_genero_pertenece = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero__pertenece=obj[0]).count()
+        grafo_genero_pertenece[obj[1]] =  valor
 
     mujer_organizacion = {}
     for obj in GeneroOrgComunitaria.objects.all():
@@ -426,9 +451,22 @@ def genero(request, template="indicadores/genero.html"):
         if dato > 0:
             mujer_organizacion[obj] = dato
 
-    dicc_genero['reparar'] = (
-                              mujer_organizacion,
-                              filtro1,
+    grafo_genero_actividad = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(genero__actividad=obj[0]).count()
+        grafo_genero_actividad[obj[1]] =  valor
+
+    grafo_genero_cual_actividad = {}
+    for obj in GeneroActividadesComunitaria.objects.all():
+        dato = filtro.filter(genero__cual_actvidad=obj).count()
+        if dato > 0:
+            grafo_genero_cual_actividad[obj] = dato
+
+    dicc_genero['reparar'] = (grafo_genero_actividades,grafo_genero_animal,
+                              grafo_genero_equipo,grafo_genero_transporte,
+                              grafo_genero_tierra,grafo_genero_pertenece,
+                              mujer_organizacion,grafo_genero_actividad,
+                              grafo_genero_cual_actividad,filtro1
                               )
 
     return render(request, template, locals())

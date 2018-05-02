@@ -688,5 +688,5 @@ class Genero(models.Model):
         verbose_name='Las mujeres de la UPF pertenece algun tipo de org. comunitaria')
     cual_comunitaria = models.ManyToManyField(GeneroOrgComunitaria, verbose_name='Cual(es)')
     actividad = models.IntegerField(choices=CHOICE_JEFE,
-        verbose_name='Las mujeres de la UPF realizan alguna comunitaria')
+        verbose_name='Las mujeres de la UPF realizan alguna actividad comunitaria')
     cual_actvidad = models.ManyToManyField(GeneroActividadesComunitaria, verbose_name='Cual(es)')
