@@ -38,8 +38,6 @@ def _queryset_filtrado(request):
     for key in unvalid_keys:
         del params[key]
 
-    print params
-
     return Encuesta.objects.filter(**params)
 
 
@@ -60,12 +58,10 @@ def indicadores1(request, template='indicadores1.html'):
             request.session['activo'] = True
             centinela = 1
             #request.session['encuestados'] = len(_queryset_filtrado(request))
-            print mensaje
 
         else:
             centinela = 0
             mensaje = "Todo fallo ni modo :("
-            print mensaje
     else:
         form = ConsultarForm()
         centinela = 0
@@ -118,6 +114,7 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
     filtro = _queryset_filtrado(request)
 
     dicc_escolaridad = OrderedDict()
+    anio = request.session['fecha']
 
     filtro1 = filtro.count()
 
@@ -148,7 +145,7 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
                 condicionesvida__idioma=e).count()
         tabla_idioma[e.nombre] = objeto
 
-    dicc_escolaridad['reaparar'] = (tabla_parentesco,tabla_sexo,tabla_educacion,
+    dicc_escolaridad[anio] = (tabla_parentesco,tabla_sexo,tabla_educacion,
                                     filtro1,cantidad_habitan,cantidad_dependen,
                                     tabla_idioma)
 
@@ -156,6 +153,7 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
 
 def agua(request, template="indicadores/agua.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_agua = OrderedDict()
 
@@ -178,13 +176,14 @@ def agua(request, template="indicadores/agua.html"):
 
     promedio_acarreo = 0
 
-    dicc_agua['reparar'] = (grafo_agua_consumo,grafo_agua_disponibilidad,
+    dicc_agua[anio] = (grafo_agua_consumo,grafo_agua_disponibilidad,
                             grafo_agua_usos,filtro1,promedio_acarreo)
 
     return render(request, template, locals())
 
 def organizaciones(request, template="indicadores/organizaciones.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_organizacion = OrderedDict()
 
@@ -211,12 +210,13 @@ def organizaciones(request, template="indicadores/organizaciones.html"):
         valor = filtro.filter(organizacionsocialproductiva__capacitacion=obj[0]).count()
         grafo_capacitacion[obj[1]] =  valor
 
-    dicc_organizacion['repaarar'] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1,grafo_capacitacion)
+    dicc_organizacion[anio] = (grafo_pertenece,grafo_org_comunitarias, grafo_beneficios,filtro1,grafo_capacitacion)
 
     return render(request, template, locals())
 
 def tierra(request, template="indicadores/tierra.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_tierra = OrderedDict()
     #tabla distribucion de frecuencia
@@ -233,13 +233,14 @@ def tierra(request, template="indicadores/tierra.html"):
         valor = filtro.filter(distribucionupf__tierra=obj[0]).count()
         grafo_distribucion_tierra[obj[1]] =  valor
 
-    dicc_tierra['reparar'] = (uno_num,seis_num,diez_mas,promedio_mz,grafo_distribucion_tierra,filtro1)
+    dicc_tierra[anio] = (uno_num,seis_num,diez_mas,promedio_mz,grafo_distribucion_tierra,filtro1)
 
 
     return render(request, template, locals())
 
 def cultivos(request, template='indicadores/productividad.html'):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
     filtro1 = filtro.count()
 
     dicc_anuales = OrderedDict()
@@ -306,6 +307,7 @@ def cultivos(request, template='indicadores/productividad.html'):
 
 def practicas(request, template="indicadores/practicas.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_practicas = OrderedDict()
 
@@ -351,7 +353,7 @@ def practicas(request, template="indicadores/practicas.html"):
         grafo_practica_gobernanza_si[obj.nombre] = valor
 
 
-    dicc_practicas['reparar'] = (grafo_practicas_sino_agroecologica,grafo_practica_agroecologica_si,
+    dicc_practicas[anio] = (grafo_practicas_sino_agroecologica,grafo_practica_agroecologica_si,
                                 grafo_practicas_sino_agroforestal,grafo_practica_agroforestal_si,
                                 grafo_practicas_sino_ancentral,grafo_practica_ancestral_si,
                                 grafo_practicas_sino_gobernanza,grafo_practica_gobernanza_si,
@@ -361,6 +363,7 @@ def practicas(request, template="indicadores/practicas.html"):
 
 def seguridad(request, template="indicadores/seguridad.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_seguridad = OrderedDict()
 
@@ -398,7 +401,7 @@ def seguridad(request, template="indicadores/seguridad.html"):
         conteo_economica[obj[1]] =  valor
 
 
-    dicc_seguridad['reparar'] = (grafo_disponen,
+    dicc_seguridad[anio] = (grafo_disponen,
                                  grafo_escasez,
                                 conteo_fenomeno,
                                 conteo_agricola,
@@ -410,6 +413,7 @@ def seguridad(request, template="indicadores/seguridad.html"):
 
 def genero(request, template="indicadores/genero.html"):
     filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
 
     dicc_genero = OrderedDict()
 
@@ -462,7 +466,7 @@ def genero(request, template="indicadores/genero.html"):
         if dato > 0:
             grafo_genero_cual_actividad[obj] = dato
 
-    dicc_genero['reparar'] = (grafo_genero_actividades,grafo_genero_animal,
+    dicc_genero[anio] = (grafo_genero_actividades,grafo_genero_animal,
                               grafo_genero_equipo,grafo_genero_transporte,
                               grafo_genero_tierra,grafo_genero_pertenece,
                               mujer_organizacion,grafo_genero_actividad,
