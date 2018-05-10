@@ -57,7 +57,7 @@ def indicadores1(request, template='indicadores1.html'):
             mensaje = "Todas las variables estan correctamente :)"
             request.session['activo'] = True
             centinela = 1
-            #request.session['encuestados'] = len(_queryset_filtrado(request))
+            request.session['encuestados'] = len(_queryset_filtrado(request))
 
         else:
             centinela = 0
