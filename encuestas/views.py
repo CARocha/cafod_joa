@@ -125,7 +125,8 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
     for e in CHOICE_PARENTESCO:
         objeto = filtro.filter(
                 condicionesvida__parentesco=e[0]).count()
-        tabla_parentesco[e[1]] = objeto
+        if objeto > 0:
+            tabla_parentesco[e[1]] = objeto
 
     tabla_sexo = OrderedDict()
     for e in CHOICE_SEXO1:
