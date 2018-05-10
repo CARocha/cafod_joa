@@ -143,7 +143,7 @@
                                 </div>
                             <div class="table-responsive" id="modalidad-{{k}}">
                                 <table class="table table-bordered table-hover">
-                                    <caption>Promedio en Mz: {{v.3|floatformat:2}} Mz</caption>
+                                    <caption>Promedio en Ha: {{v.3|floatformat:2}} Ha</caption>
                                     <thead>
                                         <tr>
                                             <th>Uso de tierra</th>
@@ -171,7 +171,7 @@
                             </div>
                              <div class="table-responsive" id="modalidad1-{{k}}">
                                 <table class="table table-bordered table-hover">
-                                    <caption>Promedio en Mz: {{v.3|floatformat:2}} Mz</caption>
+                                    <caption>Promedio en Ha: {{v.3|floatformat:2}} Ha</caption>
                                     <thead>
                                         <tr>
                                             <th>Categoria</th>
@@ -181,17 +181,17 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>1 - 5 Mz</td>
+                                        <td>1 - 5 Ha</td>
                                         <td>{{v.0}}</td>
                                         <td>{{v.0|calculaperct:request.session.encuestados|floatformat:2}} %</td>
                                     </tr>
                                     <tr>
-                                        <td>6 - 10 Mz</td>
+                                        <td>6 - 10 Ha</td>
                                         <td>{{v.1}}</td>
                                         <td>{{v.1|calculaperct:request.session.encuestados|floatformat:2}} %</td>
                                     </tr>
                                     <tr>
-                                        <td>11 Mz a más</td>
+                                        <td>11 Ha a más</td>
                                         <td>{{v.2}}</td>
                                         <td>{{v.2|calculaperct:request.session.encuestados|floatformat:2}} %</td>
                                     </tr>
