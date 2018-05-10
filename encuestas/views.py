@@ -176,7 +176,7 @@ def agua(request, template="indicadores/agua.html"):
         grafo_agua_usos[obj[1]] =  valor
 
 
-    promedio_acarreo = 0
+    promedio_acarreo = filtro.aggregate(t=Avg('usosagua__tiempo_invertido'))['t']
 
     dicc_agua[anio] = (grafo_agua_consumo,grafo_agua_disponibilidad,
                             grafo_agua_usos,filtro1,promedio_acarreo)
