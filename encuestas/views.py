@@ -143,7 +143,8 @@ def escolaridad(request, template="indicadores/escolaridad.html"):
     for e in Idiomas.objects.all():
         objeto = filtro.filter(
                 condicionesvida__idioma=e).count()
-        tabla_idioma[e.nombre] = objeto
+        if objeto > 0:
+            tabla_idioma[e.nombre] = objeto
 
     dicc_escolaridad[anio] = (tabla_parentesco,tabla_sexo,tabla_educacion,
                                     filtro1,cantidad_habitan,cantidad_dependen,
