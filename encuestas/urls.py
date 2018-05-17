@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^practicas/$', views.practicas, name='practicas'),
     url(r'^seguridad/$', views.seguridad, name='seguridad'),
     url(r'^genero/$', views.genero, name='genero'),
-    #url(r'^xls/$', views.save_as_xls, name='salvar_xls'),
+    url(r'^xls/$', views.save_as_xls, name='salvar_xls'),
 
     #filtros por ajax
     url(r'^ajax/depart/$', views.traer_departamento, name='get-depart'),
