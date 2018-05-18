@@ -87,6 +87,11 @@ def sexo_duenos(request, template="indicadores/sexo_duenos.html"):
     dicc_sexo_dueno = OrderedDict()
     anio = request.session['fecha']
     filtro1 = filtro.count()
+
+    conteo_hombre = filtro.filter(entrevistado__sexo=2).count()
+    conteo_mujer = filtro.filter(entrevistado__sexo=1).count()
+
+
     si_dueno = filtro.filter(dueno=1).count()
     no_dueno = filtro.filter(dueno=2).count()
 

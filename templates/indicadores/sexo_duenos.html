@@ -256,6 +256,13 @@ $(function () {
 <!-- Tab panes -->
     <div class="row info-publica">
         <div class="tab-content">
+            <div class="row fila-grafico">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                    Hombres: {{conteo_hombre}}   Mujeres: {{conteo_mujer}}
+                </div>
+
+            </div>
+
               {% for k,v in dicc_sexo_dueno.items %}
                 <div role="tabpanel" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}" id="home-{{k}}">
                 <div class="container">
