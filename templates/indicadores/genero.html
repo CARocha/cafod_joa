@@ -466,7 +466,7 @@ $('#container8-{{key}}').highcharts({
   <div class="tab-content">
     <div class="row fila-grafico">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-            <button type="button" class="btn btn-primary">porcentaje participa la mujer en generar ingresos y alimentos en la UPF <span class="badge">{{porcentaje_genero_ingreso}} %</span></button>
+            <button type="button" class="btn btn-primary">porcentaje participa la mujer en generar ingresos y alimentos en la UPF <span class="badge">{{porcentaje_genero_ingreso|floatformat:2}} %</span></button>
         </div>
     </div>
       {% for k,v in dicc_genero.items %}

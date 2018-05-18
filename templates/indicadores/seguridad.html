@@ -216,7 +216,7 @@ $('#container2-{{key}}').highcharts({
   <div class="tab-content">
     <div class="row fila-grafico">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
-            <button type="button" class="btn btn-primary">porcentaje de los alimentos que consume en su hogar provienen de la misma UPF <span class="badge">{{porcentaje_proviene_upf}} %</span></button>
+            <button type="button" class="btn btn-primary">porcentaje de los alimentos que consume en su hogar provienen de la misma UPF <span class="badge">{{porcentaje_proviene_upf|floatformat:2}} %</span></button>
         </div>
     </div>
       {% for k,v in dicc_seguridad.items %}
