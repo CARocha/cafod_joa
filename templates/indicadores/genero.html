@@ -464,6 +464,11 @@ $('#container8-{{key}}').highcharts({
 <!-- Tab panes -->
 <div class="row info-publica">
   <div class="tab-content">
+    <div class="row fila-grafico">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+            <button type="button" class="btn btn-primary">porcentaje participa la mujer en generar ingresos y alimentos en la UPF <span class="badge">{{porcentaje_genero_ingreso}} %</span></button>
+        </div>
+    </div>
       {% for k,v in dicc_genero.items %}
         <div role="tabpanel" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}" id="home-{{k}}">
             <div class="container">

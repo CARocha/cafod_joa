@@ -376,6 +376,8 @@ def seguridad(request, template="indicadores/seguridad.html"):
 
     filtro1 = filtro.count()
 
+    porcentaje_proviene_upf = filtro.aggregate(p=Avg('seguridadalimentaria__porcentaje'))['p']
+
     grafo_disponen = {}
     for obj in CHOICE_JEFE:
         valor = filtro.filter(seguridadalimentaria__disponen=obj[0]).count()
@@ -425,6 +427,8 @@ def genero(request, template="indicadores/genero.html"):
     dicc_genero = OrderedDict()
 
     filtro1 = filtro.count()
+
+    porcentaje_genero_ingreso = filtro.aggregate(p=Avg('genero__porcentaje'))['p']
 
     grafo_genero_actividades = {}
     for obj in CHOICE_ACTIVIDADES_MUJERES:
@@ -478,6 +482,40 @@ def genero(request, template="indicadores/genero.html"):
                               grafo_genero_tierra,grafo_genero_pertenece,
                               mujer_organizacion,grafo_genero_actividad,
                               grafo_genero_cual_actividad,filtro1
+                              )
+
+    return render(request, template, locals())
+
+def semilla(request, template="indicadores/semilla.html"):
+    filtro = _queryset_filtrado(request)
+    anio = request.session['fecha']
+
+    dicc_semilla = OrderedDict()
+
+    filtro1 = filtro.count()
+
+    porcentaje_producida = filtro.aggregate(p=Avg('usosemilla__semillas_producidas'))['p']
+    porcentaje_conseguida = filtro.aggregate(p=Avg('usosemilla__semillas_conseguidas'))['p']
+    porcentaje_compradas_agroservicio = filtro.aggregate(p=Avg('usosemilla__compradas_agroservicio'))['p']
+
+    grafo_tipo_semilla = {}
+    for obj in CHOICE_SEMILLAS:
+        valor = filtro.filter(usosemilla__tipo_semilla__icontains=obj[0]).count()
+        grafo_tipo_semilla[obj[1]] = valor
+
+    grafo_banco_semilla = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(usosemilla__banco_semilla=obj[0]).count()
+        grafo_banco_semilla[obj[1]] =  valor
+
+    grafo_sabe = {}
+    for obj in CHOICE_JEFE:
+        valor = filtro.filter(usosemilla__sabe=obj[0]).count()
+        grafo_sabe[obj[1]] =  valor
+
+
+    dicc_semilla[anio] = (grafo_tipo_semilla,grafo_banco_semilla,
+                              grafo_sabe,filtro1
                               )
 
     return render(request, template, locals())
