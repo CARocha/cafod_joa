@@ -72,20 +72,20 @@
                                         <th>Cultivo</th>
                                         <th>Unidad</th>
                                         <th>Total área sembrada(Ha)</th>
-                                        <th>Total de cantidad cosechada (Ha)</th>
+                                        <th>Total de cantidad cosechada</th>
                                         <th>Total consumo familia</th>
-                                        <th>Total consumo animal</th>
+                                        <th>Total semilla</th>
                                         <th>Total ventas</th>
                                     </tr>
                                     {% for k,value in dicc_anuales.items %}
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_area_sembrada}}</td>
-                                            <td>{{value.total_cantidad_cosechada}}</td>
-                                            <td>{{value.total_consumo_familia}}</td>
-                                            <td>{{value.total_consumo_animal}}</td>
-                                            <td>{{value.total_venta}}</td>
+                                            <td>{{value.total_area_sembrada|default:0}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
+                                            <td>{{value.total_consumo_familia|default:0}}</td>
+                                            <td>{{value.total_consumo_animal|default:0}}</td>
+                                            <td>{{value.total_venta|default:0}}</td>
                                         </tr>
                                     {% endfor %}
                                  </table>
@@ -102,20 +102,20 @@
                                        <th>Cultivo</th>
                                         <th>Unidad</th>
                                         <th>Total área sembrada(Ha)</th>
-                                        <th>Total de cantidad cosechada (Ha)</th>
+                                        <th>Total de cantidad cosechada</th>
                                         <th>Total consumo familia</th>
-                                        <th>Total consumo animal</th>
+                                        <th>Total semilla</th>
                                         <th>Total ventas</th>
                                     </tr>
                                     {% for k,value in dicc_huertos.items %}
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_area_sembrada}}</td>
-                                            <td>{{value.total_cantidad_cosechada}}</td>
-                                            <td>{{value.total_consumo_familia}}</td>
-                                            <td>{{value.total_consumo_animal}}</td>
-                                            <td>{{value.total_venta}}</td>
+                                            <td>{{value.total_area_sembrada|default:0}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
+                                            <td>{{value.total_consumo_familia|default:0}}</td>
+                                            <td>{{value.total_consumo_animal|default:0}}</td>
+                                            <td>{{value.total_venta|default:0}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -131,7 +131,7 @@
                                     <tr>
                                        <th>Cultivo</th>
                                         <th>Unidad</th>
-                                        <th>Total cantidad cosechada (Ha)</th>
+                                        <th>Total cantidad cosechada</th>
                                         <th>Total consumo familia</th>
                                         <th>Total consumo animal</th>
                                         <th>Total ventas</th>
@@ -140,10 +140,10 @@
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_cantidad_cosechada}}</td>
-                                            <td>{{value.total_consumo_familia}}</td>
-                                            <td>{{value.total_consumo_animal}}</td>
-                                            <td>{{value.total_venta}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
+                                            <td>{{value.total_consumo_familia|default:0}}</td>
+                                            <td>{{value.total_consumo_animal|default:0}}</td>
+                                            <td>{{value.total_venta|default:0}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -166,10 +166,10 @@
                                     {% for k,value in dicc_ganaderia.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{value.total_cantidad_cosechada}}</td>
-                                            <td>{{value.total_consumo_familia}}</td>
-                                            <td>{{value.total_consumo_animal}}</td>
-                                            <td>{{value.total_venta}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
+                                            <td>{{value.total_consumo_familia|default:0}}</td>
+                                            <td>{{value.total_consumo_animal|default:0}}</td>
+                                            <td>{{value.total_venta|default:0}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
