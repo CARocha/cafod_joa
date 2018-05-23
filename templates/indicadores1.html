@@ -8,6 +8,7 @@
 $( "#id_fecha" ).addClass( "form-control" );
 		$(document).ready(function() {
 				$('#id_pais').multiselect();
+				$('#id_sexo').multiselect();
 				//$('#id_departamento').multiselect();
 				//$('#id_municipio').multiselect();
 				//$('#id_comunidad').multiselect();
@@ -255,6 +256,15 @@ footer{}
 										</div>
 										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
 											{{form.pais}}
+										</div>
+
+									</div>
+									<div class="row">
+										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+											<label for="">{{form.sexo.label}}</label>
+										</div>
+										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+											{{form.sexo}}
 										</div>
 
 									</div>

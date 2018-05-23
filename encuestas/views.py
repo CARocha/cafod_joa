@@ -18,6 +18,9 @@ def _queryset_filtrado(request):
     if 'pais' in request.session:
         params['entrevistado__pais'] = request.session['pais']
 
+    if 'sexo' in request.session:
+        params['entrevistado__sexo'] = request.session['sexo']
+
     if 'departamento' in request.session:
         params['entrevistado__departamento__in'] = request.session['departamento']
 
@@ -49,6 +52,7 @@ def indicadores1(request, template='indicadores1.html'):
         if form.is_valid():
             request.session['fecha'] = form.cleaned_data['fecha']
             request.session['pais'] = form.cleaned_data['pais']
+            request.session['sexo'] = form.cleaned_data['sexo']
             request.session['departamento'] = form.cleaned_data['departamento']
             request.session['organizacion'] = form.cleaned_data['organizacion']
             request.session['municipio'] = form.cleaned_data['municipio']

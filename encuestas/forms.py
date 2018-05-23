@@ -21,9 +21,12 @@ def fecha_choice():
     return list(sorted(set(years)))
 
 
+CHOICE_SEXO_FORM = (('','--------'),(1,'Mujer'),(2,'Hombre'))
+
 class ConsultarForm(forms.Form):
     fecha = forms.ChoiceField(choices=fecha_choice(), label="Años", required=True)
     pais = forms.ModelChoiceField(queryset=Pais.objects.all(), required=True)
+    sexo = forms.ChoiceField(choices=CHOICE_SEXO_FORM, required=False)
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     organizacion = forms.ModelMultipleChoiceField(queryset=OrganizacionResp.objects.all(), required=False)
     municipio = forms.ModelMultipleChoiceField(queryset=Municipio.objects.all(), required=False)
