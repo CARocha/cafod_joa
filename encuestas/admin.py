@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 from .forms import *
+from django.forms import CheckboxSelectMultiple
 
 
 class InlineDuenoSi(admin.TabularInline):
@@ -20,6 +21,9 @@ class InlineDetalleMiembros(admin.TabularInline):
 
 class InlineCondicionesVida(admin.TabularInline):
     model = CondicionesVida
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
     extra = 1
 
 class InlineAccesoAgua(admin.TabularInline):
