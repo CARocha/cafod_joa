@@ -267,7 +267,7 @@ class CondicionesVida(models.Model):
     sexo = models.IntegerField(choices=CHOICE_SEXO1)
     edad = models.IntegerField()
     escolaridad = models.IntegerField(choices=CHOICE_ESCOLARIDAD)
-    idioma = models.ForeignKey(Idiomas, verbose_name='idiomas que habla')
+    idioma = models.ManyToManyField(Idiomas, verbose_name='idiomas que habla')
 
 
     def __unicode__(self):
@@ -402,7 +402,8 @@ class CultivosAnuales(models.Model):
     #area_cosechada = models.FloatField('Area cosechada (Ha)')
     cantidad_cosechada = models.FloatField()
     consumo_familia = models.FloatField('Consumo de la familia')
-    consumo_animal = models.FloatField('Semilla')
+    consumo_animal = models.FloatField('Guarda para semilla')
+    consumo_animals = models.FloatField('Consumo animal', null=True, blank=True)
     venta = models.FloatField()
 
     class Meta:
@@ -429,7 +430,7 @@ class CultivosHuerto(models.Model):
     #area_cosechada = models.FloatField('Area cosechada (Ha)')
     cantidad_cosechada = models.FloatField()
     consumo_familia = models.FloatField('Consumo de la familia')
-    consumo_animal = models.FloatField('Semilla')
+    consumo_animal = models.FloatField('Guarda para semilla')
     venta = models.FloatField()
 
     class Meta:
