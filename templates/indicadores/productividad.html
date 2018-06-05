@@ -81,11 +81,11 @@
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_area_sembrada|default:0}}</td>
-                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
-                                            <td>{{value.total_consumo_familia|default:0}}</td>
-                                            <td>{{value.total_consumo_animal|default:0}}</td>
-                                            <td>{{value.total_venta|default:0}}</td>
+                                            <td>{{value.total_area_sembrada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_venta|default:0|floatformat:2}}</td>
                                         </tr>
                                     {% endfor %}
                                  </table>
@@ -111,11 +111,11 @@
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_area_sembrada|default:0}}</td>
-                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
-                                            <td>{{value.total_consumo_familia|default:0}}</td>
-                                            <td>{{value.total_consumo_animal|default:0}}</td>
-                                            <td>{{value.total_venta|default:0}}</td>
+                                            <td>{{value.total_area_sembrada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_venta|default:0|floatformat:2}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -140,10 +140,10 @@
                                         <tr>
                                             <td>{{k}}</td>
                                             <td>{{value.unidad}}</td>
-                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
-                                            <td>{{value.total_consumo_familia|default:0}}</td>
-                                            <td>{{value.total_consumo_animal|default:0}}</td>
-                                            <td>{{value.total_venta|default:0}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_venta|default:0|floatformat:2}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -166,10 +166,10 @@
                                     {% for k,value in dicc_ganaderia.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{value.total_cantidad_cosechada|default:0}}</td>
-                                            <td>{{value.total_consumo_familia|default:0}}</td>
-                                            <td>{{value.total_consumo_animal|default:0}}</td>
-                                            <td>{{value.total_venta|default:0}}</td>
+                                            <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
+                                            <td>{{value.total_venta|default:0|floatformat:2}}</td>
                                     </tr>
                                     {% endfor %}
                                 </table>

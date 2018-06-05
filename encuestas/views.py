@@ -257,11 +257,11 @@ def cultivos(request, template='indicadores/productividad.html'):
     dicc_anuales = OrderedDict()
     for obj in Cultivos.objects.all():
         cultivo = filtro.filter(cultivosanuales__cultivo=obj)
-        total_area_sembrada = cultivo.aggregate(t=Sum('cultivosanuales__area_sembrada'))['t']
-        total_cantidad_cosechada = cultivo.aggregate(t=Sum('cultivosanuales__cantidad_cosechada'))['t']
-        total_consumo_familia = cultivo.aggregate(t=Sum('cultivosanuales__consumo_familia'))['t']
-        total_consumo_animal = cultivo.aggregate(t=Sum('cultivosanuales__consumo_animal'))['t']
-        total_venta = cultivo.aggregate(t=Sum('cultivosanuales__venta'))['t']
+        total_area_sembrada = cultivo.aggregate(t=Avg('cultivosanuales__area_sembrada'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Avg('cultivosanuales__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Avg('cultivosanuales__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Avg('cultivosanuales__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Avg('cultivosanuales__venta'))['t']
 
         dicc_anuales[obj] = {'unidad':obj.get_unidad_medida_display(),
                             'total_area_sembrada':total_area_sembrada,
@@ -273,11 +273,11 @@ def cultivos(request, template='indicadores/productividad.html'):
     dicc_huertos = OrderedDict()
     for obj in CultivosHuertos.objects.all():
         cultivo = filtro.filter(cultivoshuerto__cultivo=obj)
-        total_area_sembrada = cultivo.aggregate(t=Sum('cultivoshuerto__area_sembrada'))['t']
-        total_cantidad_cosechada = cultivo.aggregate(t=Sum('cultivoshuerto__cantidad_cosechada'))['t']
-        total_consumo_familia = cultivo.aggregate(t=Sum('cultivoshuerto__consumo_familia'))['t']
-        total_consumo_animal = cultivo.aggregate(t=Sum('cultivoshuerto__consumo_animal'))['t']
-        total_venta = cultivo.aggregate(t=Sum('cultivoshuerto__venta'))['t']
+        total_area_sembrada = cultivo.aggregate(t=Avg('cultivoshuerto__area_sembrada'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Avg('cultivoshuerto__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Avg('cultivoshuerto__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Avg('cultivoshuerto__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Avg('cultivoshuerto__venta'))['t']
 
         dicc_huertos[obj] = {'unidad':obj.get_unidad_medida_display(),
                             'total_area_sembrada':total_area_sembrada,
@@ -289,10 +289,10 @@ def cultivos(request, template='indicadores/productividad.html'):
     dicc_frutas = OrderedDict()
     for obj in Frutas.objects.all():
         cultivo = filtro.filter(frutascultivosperennes__cultivo=obj)
-        total_cantidad_cosechada = cultivo.aggregate(t=Sum('frutascultivosperennes__cantidad_cosechada'))['t']
-        total_consumo_familia = cultivo.aggregate(t=Sum('frutascultivosperennes__consumo_familia'))['t']
-        total_consumo_animal = cultivo.aggregate(t=Sum('frutascultivosperennes__consumo_animal'))['t']
-        total_venta = cultivo.aggregate(t=Sum('frutascultivosperennes__venta'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Avg('frutascultivosperennes__cantidad_cosechada'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Avg('frutascultivosperennes__consumo_familia'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Avg('frutascultivosperennes__consumo_animal'))['t']
+        total_venta = cultivo.aggregate(t=Avg('frutascultivosperennes__venta'))['t']
 
         dicc_frutas[obj] = {'unidad':obj.get_unidad_medida_display(),
                             'total_cantidad_cosechada':total_cantidad_cosechada,
@@ -303,10 +303,10 @@ def cultivos(request, template='indicadores/productividad.html'):
     dicc_ganaderia = OrderedDict()
     for obj in Animales.objects.all():
         cultivo = filtro.filter(ganaderia__animal=obj)
-        total_cantidad_cosechada = cultivo.aggregate(t=Sum('ganaderia__cantidad'))['t']
-        total_consumo_familia = cultivo.aggregate(t=Sum('ganaderia__cantidad_actual'))['t']
-        total_consumo_animal = cultivo.aggregate(t=Sum('ganaderia__consumo'))['t']
-        total_venta = cultivo.aggregate(t=Sum('ganaderia__cantidad_vendida'))['t']
+        total_cantidad_cosechada = cultivo.aggregate(t=Avg('ganaderia__cantidad'))['t']
+        total_consumo_familia = cultivo.aggregate(t=Avg('ganaderia__cantidad_actual'))['t']
+        total_consumo_animal = cultivo.aggregate(t=Avg('ganaderia__consumo'))['t']
+        total_venta = cultivo.aggregate(t=Avg('ganaderia__cantidad_vendida'))['t']
 
         dicc_ganaderia[obj] = {'total_cantidad_cosechada':total_cantidad_cosechada,
                             'total_consumo_familia':total_consumo_familia,

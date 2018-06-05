@@ -140,7 +140,7 @@ $('#container2-{{key}}').highcharts({
             colorByPoint: true,
             data: [ {% for k,v  in  value.6.items %}
                         {
-                            name: "{{k}}",
+                            name: "{{k}} -- ({{v}}) ",
                             y: {{v}}
                         },
                         {% endfor %}
@@ -227,6 +227,9 @@ $('#container2-{{key}}').highcharts({
                 </div>
                 <div class="row fila-grafico1">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
+                        <div class="grafico-ind" id="container2-{{k}}" width='100%'></div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
                         <div class="excel">
                             <a href="#" onclick="exportarXLS('modalidad-{{k}}'); return false;"><span class="fa fa-download"> Exportar a excel</span></a>
                         </div>
@@ -250,8 +253,8 @@ $('#container2-{{key}}').highcharts({
                                 </tbody>
                             </table>
                          </div>
-
                     </div>
+
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 space">
                         <div class="excel">
                             <a href="#" onclick="exportarXLS('modalidad2-{{k}}'); return false;"><span class="fa fa-download"> Exportar a excel</span></a>
@@ -276,7 +279,6 @@ $('#container2-{{key}}').highcharts({
                                 </tbody>
                             </table>
                          </div>
-
                     </div>
 
                 </div>
