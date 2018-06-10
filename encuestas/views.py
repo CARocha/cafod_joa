@@ -33,6 +33,9 @@ def _queryset_filtrado(request):
     if 'comunidad' in request.session:
         params['entrevistado__comunidad__in'] = request.session['comunidad']
 
+    if 'comunidad2' in request.session:
+        params['entrevistado__microcuenca__in'] = request.session['comunidad2']
+
     unvalid_keys = []
     for key in params:
         if not params[key]:
@@ -57,6 +60,7 @@ def indicadores1(request, template='indicadores1.html'):
             request.session['organizacion'] = form.cleaned_data['organizacion']
             request.session['municipio'] = form.cleaned_data['municipio']
             request.session['comunidad'] = form.cleaned_data['comunidad']
+            request.session['comunidad2'] = form.cleaned_data['comunidad2']
 
             mensaje = "Todas las variables estan correctamente :)"
             request.session['activo'] = True
@@ -77,6 +81,7 @@ def indicadores1(request, template='indicadores1.html'):
                 del request.session['organizacion']
                 del request.session['municipio']
                 del request.session['comunidad']
+                del request.session['comunidad2']
             except:
                 pass
             request.session['activo'] = False
@@ -578,12 +583,20 @@ def traer_organizacion(request):
         organizaciones = OrganizacionResp.objects.filter(departamento__id__in = lista).order_by('nombre').values('id', 'nombre')
     return HttpResponse(simplejson.dumps(list(organizaciones)), content_type='application/json')
 
+def traer_provincia(request):
+    ids = request.GET.get('ids', '')
+    if ids:
+        lista = ids.split(',')
+        results = []
+        provincies = Comunidad.objects.filter(municipio__pk__in=lista).order_by('nombre').values('id', 'nombre')
+    return HttpResponse(simplejson.dumps(list(provincies)), content_type='application/json')
+
 def traer_comunidad(request):
     ids = request.GET.get('ids', '')
     if ids:
         lista = ids.split(',')
         results = []
-        comunies = Comunidad.objects.filter(municipio__pk__in=lista).order_by('nombre').values('id', 'nombre')
+        comunies = Microcuenca.objects.filter(comunidad__pk__in=lista).order_by('nombre').values('id', 'nombre')
     return HttpResponse(simplejson.dumps(list(comunies)), content_type='application/json')
 
 def save_as_xls(request):

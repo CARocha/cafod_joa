@@ -30,7 +30,8 @@ class ConsultarForm(forms.Form):
     departamento = forms.ModelMultipleChoiceField(queryset=Departamento.objects.all(), required=False)
     organizacion = forms.ModelMultipleChoiceField(queryset=OrganizacionResp.objects.all(), required=False)
     municipio = forms.ModelMultipleChoiceField(queryset=Municipio.objects.all(), required=False)
-    comunidad = forms.ModelMultipleChoiceField(queryset=Comunidad.objects.all(), required=False)
+    comunidad = forms.ModelMultipleChoiceField(queryset=Comunidad.objects.all(), required=False, label="Provincias")
+    comunidad2 = forms.ModelMultipleChoiceField(queryset=Microcuenca.objects.all(), required=False, label="Comunidad")
 
 
 
