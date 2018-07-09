@@ -70,17 +70,15 @@
                                 <caption>Cultivos anuales</caption>
                                     <tr>
                                         <th>Cultivo</th>
-                                        <th>Unidad</th>
                                         <th>Promedio área sembrada(Ha)</th>
-                                        <th>Promedio de cantidad cosechada</th>
-                                        <th>Promedio consumo familia</th>
-                                        <th>Promedio semilla</th>
-                                        <th>Promedio ventas</th>
+                                        <th>Promedio de cantidad cosechada(qq)</th>
+                                        <th>Promedio consumo familia(qq)</th>
+                                        <th>Promedio semilla(qq)</th>
+                                        <th>Promedio ventas(qq)</th>
                                     </tr>
                                     {% for k,value in dicc_anuales.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{value.unidad}}</td>
                                             <td>{{value.total_area_sembrada|default:0|floatformat:2}}</td>
                                             <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
                                             <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
@@ -100,8 +98,8 @@
                                 <caption>Cultivos de Huertos</caption>
                                     <tr>
                                        <th>Cultivo</th>
-                                        <th>Unidad</th>
                                         <th>Promedio área sembrada(Ha)</th>
+                                        <th>Unidad</th>
                                         <th>Promedio de cantidad cosechada</th>
                                         <th>Promedio consumo familia</th>
                                         <th>Promedio semilla</th>
@@ -110,8 +108,8 @@
                                     {% for k,value in dicc_huertos.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{value.unidad}}</td>
                                             <td>{{value.total_area_sembrada|default:0|floatformat:2}}</td>
+                                            <td>{{value.unidad}}</td>
                                             <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
                                             <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
                                             <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
@@ -130,8 +128,8 @@
                                 <caption>Cultivos de Frutas</caption>
                                     <tr>
                                        <th>Cultivo</th>
-                                        <th>Unidad</th>
                                         <th>Promedio cantidad cosechada</th>
+                                        <th>Unidad</th>
                                         <th>Promedio consumo familia</th>
                                         <th>Promedio consumo animal</th>
                                         <th>Promedio ventas</th>
@@ -139,8 +137,8 @@
                                     {% for k,value in dicc_frutas.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{value.unidad}}</td>
                                             <td>{{value.total_cantidad_cosechada|default:0|floatformat:2}}</td>
+                                            <td>{{value.unidad}}</td>
                                             <td>{{value.total_consumo_familia|default:0|floatformat:2}}</td>
                                             <td>{{value.total_consumo_animal|default:0|floatformat:2}}</td>
                                             <td>{{value.total_venta|default:0|floatformat:2}}</td>
