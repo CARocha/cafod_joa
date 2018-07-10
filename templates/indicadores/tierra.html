@@ -28,7 +28,7 @@
         },
         yAxis: {
             title: {
-                text: 'Frecuencias'
+                text: 'Suma de Ha'
             }
 
         },
@@ -47,7 +47,7 @@
 
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> total de Ha<br/>'
         },
 
         series: [{
@@ -56,8 +56,8 @@
             data: [
             {% for k,v in value.4.items %}
                 {
-                    name: "{{k}}",
-                    y: {{v}},
+                    name: "{{k}} - #{{v.0}}",
+                    y: {{v.2}},
                 },
             {% endfor %}
             ]
@@ -156,8 +156,9 @@
                                     {% for k,v in v.4.items %}
                                         <tr>
                                             <td>{{k}}</td>
-                                            <td>{{v}}</td>
-                                            <td>{{v|calculaperct:request.session.encuestados|floatformat:2}} %</td>
+                                            <td>{{v.0}}</td>
+                                            <td>{{v.1|floatformat:3}}</td>
+                                            <td>{{v.0|calculaperct:request.session.encuestados|floatformat:2}} %</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

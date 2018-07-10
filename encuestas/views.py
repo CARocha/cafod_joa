@@ -247,7 +247,9 @@ def tierra(request, template="indicadores/tierra.html"):
     grafo_distribucion_tierra = {}
     for obj in CHOICE_TIERRA:
         valor = filtro.filter(distribucionupf__tierra=obj[0]).count()
-        grafo_distribucion_tierra[obj[1]] =  valor
+        hectaria = filtro.filter(distribucionupf__tierra=obj[0]).aggregate(t=Avg('distribucionupf__manzanas'))['t']
+        hectaria2 = filtro.filter(distribucionupf__tierra=obj[0]).aggregate(t=Sum('distribucionupf__manzanas'))['t']
+        grafo_distribucion_tierra[obj[1]] =  (valor,hectaria, hectaria2)
 
     dicc_tierra[anio] = (uno_num,seis_num,diez_mas,promedio_mz,grafo_distribucion_tierra,filtro1)
 
