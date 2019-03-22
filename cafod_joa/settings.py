@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'lugar',
     'encuestas',
+    'documentos',
     'smart_selects',
     'multiselectfield',
     'selectable',

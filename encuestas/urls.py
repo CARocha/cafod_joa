@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from encuestas import views
+from documentos.views import ArchivosList
 
 urlpatterns = [
     url(r'^$', views.indicadores1, name='indicadores1'),
@@ -15,6 +16,7 @@ urlpatterns = [
     url(r'^genero/$', views.genero, name='genero'),
     url(r'^semilla/$', views.semilla, name='semilla'),
     url(r'^xls/$', views.save_as_xls, name='salvar_xls'),
+    url(r'^documentos/$', ArchivosList.as_view()),
 
     #filtros por ajax
     url(r'^ajax/depart/$', views.traer_departamento, name='get-depart'),
