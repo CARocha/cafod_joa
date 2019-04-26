@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load helpertags %}
+
+{% block contenido %}
+{% include "breadcrumb.html" %}
+<div class="container">
+    <div class="table-responsive">
+    <table class="table table-bordered table-hover" cellspacing="0" width="100%">
+        <caption>Archivos</caption>
+        <thead>
+            <tr>
+                <th>Nombre del documento</th>
+                <th>Tema</th>
+                <th>Descripción</th>
+                <th>Pais</th>
+                <th>Descargar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for obj in object_list%}
+            <tr>
+                <td>{{obj.nombre_documento}}</td>
+                <td>{{obj.tema}}</td>
+                <td>{{obj.descripcion}}</td>
+                <td>{{obj.pais}}</td>
+                <td><a href="/media/{{obj.archivo}}">Descargar</a></td>
+
+            </tr>
+            {% empty%}
+                <p>Aun no han subido ningun archivo</p>
+            {%endfor%}
+        </tbody>
+    </table>
+    </div>
+    <br><br><br>
+</div>
+{% endblock %}

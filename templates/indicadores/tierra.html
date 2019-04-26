@@ -28,7 +28,7 @@
         },
         yAxis: {
             title: {
-                text: 'Suma de Ha'
+                text: 'superficie de ha'
             }
 
         },
@@ -47,7 +47,7 @@
 
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> total de Ha<br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> superficie total de ha<br/>'
         },
 
         series: [{
@@ -56,7 +56,7 @@
             data: [
             {% for k,v in value.4.items %}
                 {
-                    name: "{{k}} - #{{v.0}}",
+                    name: "{{k}} - frecuencia({{v.0}})",
                     y: {{v.2}},
                 },
             {% endfor %}
